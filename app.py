@@ -162,6 +162,97 @@ def ann(predict: str):
         else:     
          return 'Prediksi Salah, Silahkan Coba Lagi'          
 
+@app.route("/performance", methods=['POST'])
+def getPerformance():
+    start_time = time.time()
+
+    body = request.json
+    # df = pd.read_csv('outputdummy.csv')
+    df =  pd.json_normalize(
+        body,meta=[
+            'id_kabupaten',
+            # 'minggudalamtahun',
+            'sembuh',
+            'positif',
+            'meninggal']
+    )
+    df = df.rename(columns={
+        'id_kabupaten':'kabupaten',
+        # 'minggudalamtahun':'minggu',
+        'sembuh':'sembuh',
+        'positif':'total_kasus',
+        'meninggal':'meninggal'
+    }
+    )
+    df['kabupaten'] = df['kabupaten'].astype(str).astype(int)
+    # df['minggu'] = df['minggu'].astype(str).astype(int)
+    df['sembuh'] = df['sembuh'].astype(str).astype(int)
+    df['total_kasus'] = df['total_kasus'].astype(str).astype(int)
+    df['meninggal'] = df['meninggal'].astype(str).astype(int)   
+    # df['PPKM'] = 0
+    def makeFeaturesFrame(feature):
+        df_3 = df.copy()
+        df3 = df_3[['kabupaten','sembuh','meninggal','total_kasus']]
+        # df3 = df_3[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
+        xFrame = df3.drop(feature,axis=1)
+        yFrame = df3[feature]
+        return xFrame,yFrame
+
+    def SIR_makeFeaturesFrame(feature):
+        df_3 = df.copy()
+        n_population = int("819,785".replace(",", ""))
+        df_filter = df_3[['kabupaten','sembuh','meninggal','total_kasus']]
+        # df_filter = df_3[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
+        # df_filter["T"] = df_filter.loc[:, "minggu"]
+        df_filter["S"] = n_population - df_filter.loc[:, "total_kasus"] - df_filter.loc[:, "meninggal"] - df_filter.loc[:, "sembuh"]
+        df_filter["I"] = df_filter.loc[:, "total_kasus"]
+        df_filter["R"] = df_filter.loc[:, "meninggal"] + df_filter.loc[:, "sembuh"]
+        df_filter[["x", "y", "z"]] = df_filter[["S", "I", "R"]] / n_population
+        # df3 = df_filter[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
+        df3 = df_filter[['kabupaten','sembuh','meninggal','total_kasus']]
+        xFrame = df3.drop(feature,axis=1)
+        yFrame = df3[feature]
+        return xFrame,yFrame
+
+    def makeRegressionPredict(xFrame,yFrame):
+        X_train, X_test, y_train, y_test = train_test_split(xFrame.values,yFrame.values,test_size=0.20,shuffle=False)
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+        predict = model.predict(X_test)
+        mse = mean_squared_error(y_test,predict)
+        rmse = np.sqrt(mse)
+        mse = format(mse, '.6f')
+        rmse = format(rmse, '.6f')
+        r2 = r2_score(y_test,predict)
+        score = model.score(X_test,y_test)
+        return mse,rmse,r2
+
+    def makeBayesianPredict(xFrame,yFrame):
+        X_train, X_test, y_train, y_test = train_test_split(xFrame.values,yFrame.values,test_size=0.20,shuffle=False)
+        model = BayesianRidge()
+        model.fit(X_train, y_train)
+        predict = model.predict(X_test)
+        mse = mean_squared_error(y_test,predict)
+        rmse = np.sqrt(mse)
+        mse = format(mse, '.6f')
+        rmse = format(rmse, '.6f')
+        r2 = r2_score(y_test,predict)
+        return mse,rmse,r2
+    # get
+    meninggal_index = makeFeaturesFrame('meninggal')
+    sembuh_index = makeFeaturesFrame('sembuh')
+    total_kasus_index = makeFeaturesFrame('total_kasus')
+    SIRmeninggal_index = SIR_makeFeaturesFrame('meninggal')
+    SIRsembuh_index = SIR_makeFeaturesFrame('sembuh')
+    SIRtotal_kasus_index = SIR_makeFeaturesFrame('total_kasus')
+    # perform
+    meninggal_predict = makeRegressionPredict(meninggal_index[0],meninggal_index[1])
+    sembuh_predict = makeRegressionPredict(sembuh_index[0],sembuh_index[1])
+    total_kasus_predict = makeRegressionPredict(total_kasus_index[0],total_kasus_index[1])
+    SIRmeninggal_predict = makeBayesianPredict(SIRmeninggal_index[0],SIRmeninggal_index[1])
+    SIRsembuh_predict = makeBayesianPredict(SIRsembuh_index[0],SIRsembuh_index[1])
+    SIRtotal_kasus_predict = makeBayesianPredict(SIRtotal_kasus_index[0],SIRtotal_kasus_index[1])
+    return jsonify([meninggal_predict,sembuh_predict,total_kasus_predict,SIRmeninggal_predict,SIRsembuh_predict,SIRtotal_kasus_predict])
 
 @app.route("/retrain", methods=['POST'])
 def retrain():
@@ -214,7 +305,6 @@ def retrain():
         xFrame = df3.drop(feature,axis=1)
         yFrame = df3[feature]
         return xFrame,yFrame
-
 
     #######-----REGRESSION MENINGGAL-----#########
 

@@ -215,7 +215,7 @@ def getPerformance():
         return xFrame,yFrame
 
     def makeRegressionPredict(xFrame,yFrame):
-        X_train, X_test, y_train, y_test = train_test_split(xFrame.values,yFrame.values,test_size=0.20,shuffle=False)
+        X_train, X_test, y_train, y_test = train_test_split(xFrame.values,yFrame.values,test_size=0.4,shuffle=True)
         model = LinearRegression()
         model.fit(X_train, y_train)
         predict = model.predict(X_test)
@@ -228,7 +228,7 @@ def getPerformance():
         return mse,rmse,r2
 
     def makeBayesianPredict(xFrame,yFrame):
-        X_train, X_test, y_train, y_test = train_test_split(xFrame.values,yFrame.values,test_size=0.20,shuffle=False)
+        X_train, X_test, y_train, y_test = train_test_split(xFrame.values,yFrame.values,test_size=0.4,shuffle=True)
         model = BayesianRidge()
         model.fit(X_train, y_train)
         predict = model.predict(X_test)

@@ -63,6 +63,7 @@ class Lending extends BaseController
         $data_user = $this->_puskesmas->getUsers();
         $data_kabupaten = $this->_puskesmas->getKabupaten();
         $dataminggu = $this->_myth_datas->getMinggu();
+        $dataMingguTahun = $this->_dataaktual->getMingguTahun();
         $datetime = $this->_dataaktual->getdatetime();
         if (user() == null) {
             $data_puskesmas = null;
@@ -80,7 +81,8 @@ class Lending extends BaseController
             'data_kabupaten' => $data_kabupaten,
             'data_puskesmas' => $data_puskesmas,
             'data_datetime' => $datetime,
-            'data_minggu' => $dataminggu
+            'data_minggu' => $dataminggu,
+            'data_minggu_tahun' => $dataMingguTahun,
         ];
 
         return view('pages/lending', $data);
@@ -302,9 +304,11 @@ class Lending extends BaseController
             'sembuh' => (int)$sembuh,
             'meninggal' => (int)$meninggal,
         ];
+
+        // session()->setFlashdata('prediksiSuccess',$data);
         $dataallPerform = $this->_myth_datas->getAll();
         $performdata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/performance', json_encode($dataallPerform));
-        // session()->setFlashdata('prediksiSuccess',$data);
+
         $regressionpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/positif', json_encode($data));
         $regressionmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/meninggal', json_encode($data));
         $regressionsembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/sembuh', json_encode($data));
@@ -314,9 +318,8 @@ class Lending extends BaseController
         $annpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/positif', json_encode($data));
         $annmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/meninggal', json_encode($data));
         $annsembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/sembuh', json_encode($data));
-// 
-// 
-        $performdataall = json_decode($performdata, true);
+        
+        
         $responserp = json_decode($regressionpositif, true);
         $responserm = json_decode($regressionmeninggal, true);
         $responsers = json_decode($regressionsembuh, true);
@@ -326,9 +329,10 @@ class Lending extends BaseController
         $responseap = json_decode($annpositif, true);
         $responseam = json_decode($annmeninggal, true);
         $responseas = json_decode($annsembuh, true);
+        $performdataall = json_decode($performdata, true);
+
         $data = array();
         $data = array(
-            "performance" => $performdataall,
             "regressionpositif" => $responserp < 1 ? 0 : floor($responserp),
             "regressionmeninggal" => $responserm  < 1 ? 0 : floor($responserm),
             "regressionsembuh" => $responsers  < 1 ? 0 : floor($responsers),
@@ -337,7 +341,8 @@ class Lending extends BaseController
             "bayesiansembuh" => $responsebs  < 1 ? 0 : floor($responsebs),
             "annpositif" => $responseap[0]  < 1 ? 0 : floor($responseap[0]),
             "annmeninggal" => $responseam[0]  < 1 ? 0 : floor($responseam[0]),
-            "annsembuh" => $responseas[0]  < 1 ? 0 : floor($responseas[0])
+            "annsembuh" => $responseas[0]  < 1 ? 0 : floor($responseas[0]),
+            "performance" => $performdataall,
         );
         // $data['prediksi'] = $response;
         // echo $response;
@@ -436,6 +441,7 @@ class Lending extends BaseController
         return redirect()->to('/');
     }
 
+
     public function Data_aktual()
     {
         $data = $this->_myth_datas->getTotal();
@@ -443,14 +449,17 @@ class Lending extends BaseController
         $positif = array();
         $sembuh = array();
         $meninggal = array();
+        $minggudalamtahun = array();
         foreach ($data as $dataaktual) {
             $positif[] = $dataaktual->positif;
             $sembuh[] = $dataaktual->sembuh;
             $meninggal[] = $dataaktual->meninggal;
+            $minggudalamtahun[] = $dataaktual->minggudalamtahun;
         };
         $output = array(
             "positif" => $positif,
             "sembuh" => $sembuh,
+            "minggudalamtahun" => $minggudalamtahun,
             "meninggal" => $meninggal
         );
         echo json_encode($output);
@@ -477,14 +486,18 @@ class Lending extends BaseController
         $positif = array();
         $sembuh = array();
         $meninggal = array();
+        $minggudalamtahun = array();
+
         foreach ($data as $dataaktual) {
             $positif[] = $dataaktual->positif;
             $sembuh[] = $dataaktual->sembuh;
             $meninggal[] = $dataaktual->meninggal;
+            $minggudalamtahun[] = $dataaktual->minggudalamtahun;
         };
         $output = array(
             "positif" => $positif,
             "sembuh" => $sembuh,
+            "minggudalamtahun" => $minggudalamtahun,
             "meninggal" => $meninggal
         );
         echo json_encode($output);

@@ -334,8 +334,12 @@
                                             </div>
                                         </div>
                                         <button type="submit" name="submit"
-                                            class="ml-2 text-white bg-bgFooter hover:bg-bgFooterHover focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bgFobg-bgFooter dark:hover:bg-bgFooterHover focus:outline-none dark:focus:ring-bgFbg-bgFooter">
+                                            class=" text-white bg-bgFooter hover:bg-bgFooterHover focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bgFobg-bgFooter dark:hover:bg-bgFooterHover focus:outline-none dark:focus:ring-bgFbg-bgFooter">
                                             Submit
+                                        </button>
+                                        <button type="button" name="button" id="rezet"
+                                            class=" text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bgFobg-bgFooter dark:hover:bg-orange-600 focus:outline-none dark:focus:ring-bgFbg-bgFooter">
+                                            Reset
                                         </button>
                                     </div>
                                 </form>
@@ -375,9 +379,14 @@
                         <div>
                             <span class="flex items-center"><i class="fa-solid fa-cog fa-spin mr-2"></i>Hasil Prediksi
                                 Covid-19</span>
-                            <span class="flex items-center text-sm font-normal pl-6">Pada minggu ke 28 tahun 2023 - 06
-                                April
-                                2023</span>
+                            <span id="hasil_prediksi" class="hidden flex items-center text-sm font-normal pl-6"></span>
+                            <script>
+                                var minggu_hasil = "<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>"
+                                minggu_hasil = parseInt(minggu_hasil) + 1;
+                                var tahun_hasil = "<?= $meta['data_minggu_tahun'][0]->tahun ?>"
+                                document.querySelector('#hasil_prediksi').innerHTML = "Hasil Prediksi pada Minggu ke - " + minggu_hasil + " Tahun " + tahun_hasil
+                                
+                            </script>
                         </div>
                         <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor"
                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -418,14 +427,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-white mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -447,30 +449,41 @@
                                                                 <?php
                                                                     $positifreg2 = session()->getFlashData('nilai')['positif'];
                                                                     echo array_sum($positifreg2);
+                                                                    $positifreg2_old = session()->getFlashData('nilai')['positif'];
                                                                     ?>
                                                             </span>
                                                         </div>
                                                         <div>
                                                             <span class="font-base text-lg text-white">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-white">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-white">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['regressionpositif'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['positifreg'];
                                                                     // $positifreg3 = explode('.', abs($positifreg2));
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg3 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg3 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg3 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg3.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <p class="text-sm text-white mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($positifreg2_old))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($positifreg2_old))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($positifreg2_old))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -508,14 +521,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -541,24 +547,36 @@
                                                         <div>
                                                             <span class="font-base text-md text-black">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-black">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-black">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['regressionsembuh'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['sembuhreg'];
                                                                     // $positifreg3 = explode('.', abs($positifreg2));
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg4 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg4 = "<?php echo $positifreg2 ?>"
+
+                                                                    let repositifreg4 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg4.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                             <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($sembuhreg2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($sembuhreg2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($sembuhreg2))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -596,14 +614,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -629,25 +640,35 @@
                                                         <div>
                                                             <span class="font-base text-md text-black">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-black">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-black">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['regressionmeninggal'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['meninggalreg'];
                                                                     // $positifreg3 = explode('.', abs($positifreg2));
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg5 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg5 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg5 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg5.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($meninggalreg1))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($meninggalreg1))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($meninggalreg1))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -692,14 +713,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-white mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -725,10 +739,10 @@
                                                         <div>
                                                             <span class="font-base text-lg text-white">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-white">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-white">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['annpositif'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['positifann'];
                                                                     // $positifreg3 = explode('.', abs($positifreg2));
 
                                                                     // if ($positifreg2 >= 1) {
@@ -744,23 +758,34 @@
                                                                     // }
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg6 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg6 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg6 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg6.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <p class="text-sm text-white mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($positifann2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($positifann2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($positifann2))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
                                                 </span>
                                             </p>
+                                            
                                         </div>
                                         <div class="flex-auto p-4">
                                             <div class="flex flex-wrap pt-4 pr-4 pl-4 pb-0 bg-bgCard rounded-lg">
@@ -793,14 +818,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                           
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -826,10 +844,10 @@
                                                         <div>
                                                             <span class="font-base text-md text-black">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-black">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-black">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['annsembuh'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['sembuhann'];
                                                                     // $positifreg3 = explode('.', abs($positifreg2));
                                                                     // if ($positifreg2 >= 1) {
                                                                     //     $num = explode('+', $positifreg2);
@@ -844,18 +862,28 @@
                                                                     // }
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg7 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg7 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg7 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg7.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($sembuhann2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($sembuhann2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($sembuhann2))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -893,14 +921,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -926,10 +947,10 @@
                                                         <div>
                                                             <span class="font-base text-md text-black">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-black">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-black">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['annmeninggal'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['meninggalann'];
                                                                     // $positifreg3 = explode('.', abs($positifreg2));
                                                                     // if ($positifreg2 >= 1) {
                                                                     //     $num = explode('+', $positifreg2);
@@ -944,18 +965,28 @@
                                                                     // }
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg8 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg8 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg8 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg8.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($meninggalann2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($meninggalann2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($meninggalann2))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -1000,14 +1031,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-white mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -1033,10 +1057,10 @@
                                                         <div>
                                                             <span class="font-base text-lg text-white">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-white">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-white">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['bayesianpositif'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['positifbay'];
                                                                     // if ($positifreg2 >= 1) {
                                                                     //     $num = explode('+', $positifreg2);
                                                                     //     $precision = $num[1] + strlen(filter_var($num[0], FILTER_SANITIZE_NUMBER_INT)) - 1;
@@ -1050,18 +1074,28 @@
                                                                     // }
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg9 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg9 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg9 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg9.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <p class="text-sm text-white mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($positifseir2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($positifseir2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($positifseir2))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -1099,14 +1133,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -1132,10 +1159,10 @@
                                                         <div>
                                                             <span class="font-base text-md text-black">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-black">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-black">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['bayesiansembuh'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['sembuhbay'];
                                                                     // if ($positifreg2 >= 1) {
                                                                     //     $num = explode('+', $positifreg2);
                                                                     //     $precision = $num[1] + strlen(filter_var($num[0], FILTER_SANITIZE_NUMBER_INT)) - 1;
@@ -1149,18 +1176,28 @@
                                                                     // }
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg10 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg10 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg10 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg10.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($sembuhseir2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($sembuhseir2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($sembuhseir2))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -1198,14 +1235,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
-                                                </span>
-                                                <span class="whitespace-nowrap text-xs">
-                                                    Dari Minggu Lalu
-                                                </span>
-                                            </p>
+                                            
                                         </div>
                                         <div class="flex-auto px-4 ">
                                             <hr>
@@ -1231,10 +1261,10 @@
                                                         <div>
                                                             <span class="font-base text-md text-black">Prediksi</span>
                                                             <br>
-                                                            <span id="positifreg2"
-                                                                class="font-semibold text-xl text-black">
-                                                                <?php
+                                                            <span id="positifreg2" class="font-semibold text-xl text-black">
+                                                                    <?php
                                                                     $positifreg2 = session()->getFlashData('prediksi')['bayesianmeninggal'];
+                                                                    $repositifreg2 = session()->getFlashData('reprediksi')['meninggalbay'];
                                                                     // if ($positifreg2 >= 1) {
                                                                     //     $num = explode('+', $positifreg2);
                                                                     //     $precision = $num[1] + strlen(filter_var($num[0], FILTER_SANITIZE_NUMBER_INT)) - 1;
@@ -1248,10 +1278,16 @@
                                                                     // }
                                                                     echo $positifreg2;
                                                                     ?>
-                                                            </span>
-                                                            <script type="text/javascript">
-                                                                let positifreg11 = "<?php echo $positifreg2 ?>"
-                                                            </script>
+                                                                </span>
+                                                                <script type="text/javascript">
+                                                                    let positifreg11 = "<?php echo $positifreg2 ?>"
+                                                                    let repositifreg11 = []
+                                                                    <?php
+                                                                    foreach ($repositifreg2 as $test) {
+                                                                        echo 'repositifreg11.push(' . $test . ');';
+                                                                    }
+                                                                    ?>
+                                                                </script>
                                                         </div>
                                                     </div>
 
@@ -1259,8 +1295,12 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="text-emerald-500 mr-2">
-                                                    <i class="fas fa-arrow-up"></i> 3.48%
+                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($meninggalseir2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($meninggalseir2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    <?php 
+                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($meninggalseir2))*100;
+                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                    ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
                                                     Dari Minggu Lalu
@@ -1385,7 +1425,7 @@
                                 <td class="text-center">
                                     <?= $data  ?>
                                 </td>
-                                <?php foreach($performance[5] as $idx=>$pfm) :?>
+                                <?php foreach($performance[$key+3] as $idx=>$pfm) :?>
                                 <td class="text-center">
                                     <?= $pfm  ?>
                                 </td>
@@ -2761,17 +2801,14 @@
 <script async>
 
     var optionsDataAktual = {
-        chart: {
-            height: '386px',
-            type: "area",
-            events: {
-                click: function () {
-                    modal1.style.display = "block";
-                }
-            }
-        },
-        dataLabels: {
-            enabled: false
+        title: {
+            text: "Grafik Data Aktual Covid",
+            offsetX: 20,
+            offsetY: 0,
+            style: {
+                fontSize: '14px',
+                fontWeight: 'bold',
+            },
         },
         colors: ["#FF3232", "#00E000", "#1F1F1F"],
         series: [],
@@ -2783,6 +2820,13 @@
                 opacityTo: 0.9,
                 stops: [0, 90, 100]
             }
+        },
+        chart: {
+            height: 470,
+            type: 'area',
+        },
+        dataLabels: {
+            enabled: false
         },
         noData: {
             text: 'API Loading...'
@@ -2802,7 +2846,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal2.style.display = "block";
                 }
             }
@@ -2810,7 +2854,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#FF3232"],
+        colors: ["#FF3232", "#7d1111"],
         series: [],
         fill: {
             type: "gradient",
@@ -2823,6 +2867,18 @@
         },
         yaxis: {
             show: false
+        },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
         }
     }
     var chartPositifRegresi = new ApexCharts(document.querySelector("#positif_chart_regresi"), optionPositifRegresi);
@@ -2835,7 +2891,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal3.style.display = "block";
                 }
             }
@@ -2843,7 +2899,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#00E000"],
+        colors: ["#00E000", "#088008"],
         series: [],
         fill: {
             type: "gradient",
@@ -2856,6 +2912,18 @@
         },
         yaxis: {
             show: false
+        },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
         }
 
     }
@@ -2869,7 +2937,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal4.style.display = "block";
                 }
             }
@@ -2877,7 +2945,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#1F1F1F"],
+        colors: ["#1F1F1F", "#8a8888"],
         series: [],
         fill: {
             type: "gradient",
@@ -2890,6 +2958,18 @@
         },
         yaxis: {
             show: false
+        },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
         }
     }
     var chartMeninggalRegresi = new ApexCharts(document.querySelector("#meninggal_chart_regresi"), optionMeninggalRegresi);
@@ -2905,7 +2985,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal5.style.display = "block";
                 }
             }
@@ -2913,7 +2993,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#FF3232"],
+        colors: ["#FF3232", "#7d1111"],
         series: [],
         fill: {
             type: "gradient",
@@ -2927,6 +3007,18 @@
         yaxis: {
             show: false
         },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
+        }
     }
     var chartPositifAnn = new ApexCharts(document.querySelector("#positif_chart_ann"), optionPositifAnn);
     chartPositifAnn.render();
@@ -2938,7 +3030,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal6.style.display = "block";
                 }
             }
@@ -2946,7 +3038,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#00E000"],
+        colors: ["#00E000", "#088008"],
         series: [],
         fill: {
             type: "gradient",
@@ -2960,6 +3052,18 @@
         yaxis: {
             show: false
         },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
+        }
     }
     var chartSembuhAnn = new ApexCharts(document.querySelector("#sembuh_chart_ann"), optionSembuhAnn);
     chartSembuhAnn.render();
@@ -2971,7 +3075,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal7.style.display = "block";
                 }
             }
@@ -2979,7 +3083,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#1F1F1F"],
+        colors: ["#1F1F1F", "#8a8888"],
         series: [],
         fill: {
             type: "gradient",
@@ -2993,6 +3097,18 @@
         yaxis: {
             show: false
         },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
+        }
     }
     var chartMeninggalAnn = new ApexCharts(document.querySelector("#meninggal_chart_ann"), optionMeninggalAnn);
     chartMeninggalAnn.render();
@@ -3008,7 +3124,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal8.style.display = "block";
                 }
             }
@@ -3016,7 +3132,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#FF3232"],
+        colors: ["#FF3232", "#7d1111"],
         series: [],
         fill: {
             type: "gradient",
@@ -3030,6 +3146,18 @@
         yaxis: {
             show: false
         },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
+        }
     }
     var chartPositifSier = new ApexCharts(document.querySelector("#positif_chart_sier"), optionPositifSier);
     chartPositifSier.render();
@@ -3041,7 +3169,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal9.style.display = "block";
                 }
             }
@@ -3049,7 +3177,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#00E000"],
+        colors: ["#00E000", "#088008"],
         series: [],
         fill: {
             type: "gradient",
@@ -3063,6 +3191,18 @@
         yaxis: {
             show: false
         },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
+        }
     }
     var chartSembuhSier = new ApexCharts(document.querySelector("#sembuh_chart_sier"), optionSembuhSier);
     chartSembuhSier.render();
@@ -3074,7 +3214,7 @@
             height: '200px',
             type: "area",
             events: {
-                click: function () {
+                click: function() {
                     modal10.style.display = "block";
                 }
             }
@@ -3082,7 +3222,7 @@
         dataLabels: {
             enabled: false
         },
-        colors: ["#1F1F1F"],
+        colors: ["#1F1F1F", "#8a8888"],
         series: [],
         fill: {
             type: "gradient",
@@ -3096,6 +3236,18 @@
         yaxis: {
             show: false
         },
+        xaxis: {
+            categories: [
+                "M1",
+                "M2",
+                "M3",
+                "M4",
+                "M5",
+                "M6",
+                "M7",
+                "M8"
+            ]
+        }
 
     }
     var chartMeninggalSier = new ApexCharts(document.querySelector("#meninggal_chart_sier"), optionMeninggalSier);
@@ -3257,6 +3409,11 @@
                 let sumpositif = res.positif[res.positif.length - 1];
                 let sumsembuh = res.sembuh[res.sembuh.length - 1];
                 let summeninggal = res.meninggal[res.meninggal.length - 1];
+                let minggu = res.minggudalamtahun
+                let minggudalamtahun = []
+                minggu.forEach((arr, idx) => {
+                    minggudalamtahun.push("Minggu ke-" + arr)
+                })
                 // let sumpositif = 0;
                 // let sumsembuh = 0;
                 // let summeninggal = 0;
@@ -3276,6 +3433,73 @@
                 $('#positifseir1').replaceWith(`<span id="positifseir1" class="font-semibold text-xl text-white">${sumpositif}</span>`);
                 $('#sembuhseir1').replaceWith(`<span id="sembuhseir1" class="font-semibold text-xl text-black">${sumsembuh}</span>`);
                 $('#meninggalseir1').replaceWith(`<span id="meninggalseir1" class="font-semibold text-xl text-black">${summeninggal}</span>`);
+                chartDataAktual.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggudalamtahun,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartDataAktual.updateSeries([{
                     name: "Positif",
                     data: (res.positif)
@@ -3289,6 +3513,73 @@
                     data: (res.meninggal)
                 }
                 ])
+                chartDataAktual2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggudalamtahun,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartDataAktual2.updateSeries([{
                     name: "Positif",
                     data: (res.positif)
@@ -3348,17 +3639,23 @@
                 const arraymeninggalregresi = res.meninggal
                 const arraypositifann = res.positif
 
-
                 // console.log(arraypositifregresi.concat(positifreg3))
                 // console.log(arraypositifann)
                 chartPositifRegresi.updateSeries([{
                     name: "Positif",
                     data: (res.positif.concat(positifreg3))
-                }])
+                }, {
+                    name: "Reprediksi",
+                    data: (repositifreg3)
+                }, ])
                 chartPositifRegresi2.updateSeries([{
                     name: "Positif",
                     data: (res.positif.concat(positifreg3))
-                }])
+                }, {
+                    name: "Reprediksi",
+                    data: (repositifreg3)
+                }, ])
+
                 // chartgrafikreportregresi.updateSeries([{
                 //     name: "Positif",
                 //     data: (res.positif.concat(positifreg3))
@@ -3366,103 +3663,163 @@
 
                 // arraysembuhregresi.push("20")
                 chartSembuhRegresi.updateSeries([{
-                    name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg4))
-                }
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg4))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg4)
+                    },
 
                 ])
                 chartSembuhRegresi2.updateSeries([{
-                    name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg4))
-                }
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg4))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg4)
+                    },
 
                 ])
-
-
                 // arraymeninggalregresi.push("20")
                 chartMeninggalRegresi.updateSeries([{
-                    name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg5))
-                }
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg5))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg5)
+                    },
 
                 ])
                 chartMeninggalRegresi2.updateSeries([{
                     name: "Meninggal",
                     data: (res.meninggal.concat(positifreg5))
-                }])
+                }, {
+                    name: "Reprediksi",
+                    data: (repositifreg5)
+                }, ])
 
 
+                // arraypositifann.push("20")
                 // arraypositifann.push("20")
                 chartPositifAnn.updateSeries([{
                     name: "Positif",
                     data: (res.positif.concat(positifreg6))
-                }])
+                }, {
+                    name: "Reprediksi",
+                    data: (repositifreg6)
+                }, ])
                 chartPositifAnn2.updateSeries([{
-                    name: "Positif",
-                    data: (res.positif.concat(positifreg6))
-                }
+                        name: "Positif",
+                        data: (res.positif.concat(positifreg6))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg6)
+                    },
 
                 ])
                 chartSembuhAnn.updateSeries([{
-                    name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg7))
-                }
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg7))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg7)
+                    },
 
                 ])
                 chartSembuhAnn2.updateSeries([{
-                    name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg7))
-                }
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg7))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg7)
+                    },
 
                 ])
                 chartMeninggalAnn.updateSeries([{
-                    name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg8))
-                }
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg8))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg8)
+                    },
 
                 ])
                 chartMeninggalAnn2.updateSeries([{
-                    name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg8))
-                }
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg8))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg8)
+                    },
 
                 ])
                 chartPositifSier.updateSeries([{
-                    name: "Positif",
-                    data: (res.positif.concat(positifreg9))
-                }
+                        name: "Positif",
+                        data: (res.positif.concat(positifreg9))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg9)
+                    },
 
                 ])
                 chartPositifSier2.updateSeries([{
-                    name: "Positif",
-                    data: (res.positif.concat(positifreg9))
-                }
+                        name: "Positif",
+                        data: (res.positif.concat(positifreg9))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg9)
+                    },
 
                 ])
                 chartSembuhSier.updateSeries([{
-                    name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg10))
-                }
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg10))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg10)
+                    },
 
                 ])
                 chartSembuhSier2.updateSeries([{
-                    name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg10))
-                }
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg10))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg10)
+                    },
 
                 ])
                 chartMeninggalSier.updateSeries([{
-                    name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg11))
-                }
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg11))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg11)
+                    },
 
                 ])
                 chartMeninggalSier2.updateSeries([{
-                    name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg11))
-                }
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg11))
+                    }, {
+                        name: "Reprediksi",
+                        data: (repositifreg11)
+                    },
 
                 ])
+
+                if(positifreg4 && positifreg4!=''){
+                                    if(document.querySelector('#hasil_prediksi').classList.contains('hidden')){
+                                        document.querySelector('#hasil_prediksi').classList.remove('hidden')
+                                        console.log('yyy');
+                                    }
+                                }else{
+                                    if(!document.querySelector('#hasil_prediksi').classList.contains('hidden')){
+                                        document.querySelector('#hasil_prediksi').classList.add('hidden')
+                                        console.log('ttt');
+                                    }
+
+                                }
             }
         })
     })
@@ -3521,6 +3878,78 @@
                     let pilpositif = res.positif;
                     let pilsembuh = res.sembuh;
                     let pilmeninggal = res.meninggal;
+                    let minggu = res.minggudalamtahun
+                    let minggudalamtahun = []
+                    minggu.forEach((arr, idx) => {
+                        minggudalamtahun.push("Minggu ke-" + arr)
+                    })
+                    chartDataAktual.updateOptions({
+                        dataLabels: {
+                            enabled: true,
+                            // formatter: function (val) {
+                            //     return val + " Individu";
+                            // },
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 5,
+                                dataLabels: {
+                                    position: 'top',
+                                },
+                            }
+                        },
+                        xaxis: {
+                            categories: minggudalamtahun,
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                        },
+                        yaxis: [
+                            {
+                                axisTicks: {
+                                    show: true,
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: '#008FFB'
+                                },
+                                labels: {
+                                    style: {
+                                        colors: '#008FFB',
+                                    }
+                                },
+                                title: {
+                                    text: " Individu",
+                                    style: {
+                                        color: '#008FFB',
+                                    }
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            }
+                        ],
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    return val + " Individu"
+                                }
+                            }
+                        },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                            }
+                        }],
+                    })
 
                     chartDataAktual.updateSeries([{
                         name: "Positif",
@@ -3535,6 +3964,74 @@
                         data: (pilmeninggal)
                     }
                     ])
+                    chartDataAktual2.updateOptions({
+                        dataLabels: {
+                            enabled: true,
+                            // formatter: function (val) {
+                            //     return val + " Individu";
+                            // },
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 5,
+                                dataLabels: {
+                                    position: 'top',
+                                },
+                            }
+                        },
+                        xaxis: {
+                            categories: minggudalamtahun,
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                        },
+                        yaxis: [
+                            {
+                                axisTicks: {
+                                    show: true,
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: '#008FFB'
+                                },
+                                labels: {
+                                    style: {
+                                        colors: '#008FFB',
+                                    }
+                                },
+                                title: {
+                                    text: " Individu",
+                                    style: {
+                                        color: '#008FFB',
+                                    }
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            }
+                        ],
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    return val + " Individu"
+                                }
+                            }
+                        },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                            }
+                        }],
+                    })
+
                     chartDataAktual2.updateSeries([{
                         name: "Positif",
                         data: (res.positif)
@@ -3551,6 +4048,227 @@
                 }
             })
         });
+        $("#rezet").on("click", function (e) {
+            e.preventDefault()
+            $('#dariminggu').prop('selectedIndex', 0);
+            $("#tahun ").empty().append($('<option selected disabled></option>').text("Pilih Tahun"));
+            // $('#').prop('selectedIndex', 0);
+            $.ajax({
+                type: "GET",
+                url: '<?php echo base_url(); ?>lending/dataaktual',
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (res) {
+                    let minggu = res.minggudalamtahun
+                    let minggudalamtahun = []
+                    minggu.forEach((arr, idx) => {
+                        minggudalamtahun.push("Minggu ke-" + arr)
+                    })
+
+                    chartDataAktual.updateOptions({
+                        dataLabels: {
+                            enabled: true,
+                            // formatter: function (val) {
+                            //     return val + " Individu";
+                            // },
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 5,
+                                dataLabels: {
+                                    position: 'top',
+                                },
+                            }
+                        },
+                        xaxis: {
+                            categories: minggudalamtahun,
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                        },
+                        yaxis: [
+                            {
+                                axisTicks: {
+                                    show: true,
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: '#008FFB'
+                                },
+                                labels: {
+                                    style: {
+                                        colors: '#008FFB',
+                                    }
+                                },
+                                title: {
+                                    text: " Individu",
+                                    style: {
+                                        color: '#008FFB',
+                                    }
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            }
+                        ],
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    return val + " Individu"
+                                }
+                            }
+                        },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                            }
+                        }],
+                    })
+                    chartDataAktual.updateSeries([{
+                        name: "Positif",
+                        data: (res.positif)
+                    },
+                    {
+                        name: "Sembuh",
+                        data: (res.sembuh)
+                    },
+                    {
+                        name: "Meninggal",
+                        data: (res.meninggal)
+                    }
+                    ])
+                    chartDataAktual2.updateOptions({
+                        dataLabels: {
+                            enabled: true,
+                            // formatter: function (val) {
+                            //     return val + " Individu";
+                            // },
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 5,
+                                dataLabels: {
+                                    position: 'top',
+                                },
+                            }
+                        },
+                        xaxis: {
+                            categories: minggudalamtahun,
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                        },
+                        yaxis: [
+                            {
+                                axisTicks: {
+                                    show: true,
+                                },
+                                axisBorder: {
+                                    show: true,
+                                    color: '#008FFB'
+                                },
+                                labels: {
+                                    style: {
+                                        colors: '#008FFB',
+                                    }
+                                },
+                                title: {
+                                    text: " Individu",
+                                    style: {
+                                        color: '#008FFB',
+                                    }
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            }
+                        ],
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function (val) {
+                                    return val + " Individu"
+                                }
+                            }
+                        },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                dataLabels: {
+                                    enabled: false,
+                                },
+                            }
+                        }],
+                    })
+                    chartDataAktual2.updateSeries([{
+                        name: "Positif",
+                        data: (res.positif)
+                    },
+                    {
+                        name: "Sembuh",
+                        data: (res.sembuh)
+                    },
+                    {
+                        name: "Meninggal",
+                        data: (res.meninggal)
+                    }
+                    ])
+                    chartgrafikreportregresi.updateSeries([{
+                        name: "Positif",
+                        data: (res.positif.concat(positifreg3))
+                    },
+                    {
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg4))
+                    },
+                    {
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg5))
+                    }
+                    ])
+                    chartgrafikreportann.updateSeries([{
+                        name: "Positif",
+                        data: (res.positif.concat(positifreg6))
+                    },
+                    {
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg7))
+                    },
+                    {
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg8))
+                    }
+                    ])
+                    chartgrafikreportsier.updateSeries([{
+                        name: "Positif",
+                        data: (res.positif.concat(positifreg9))
+                    },
+                    {
+                        name: "Sembuh",
+                        data: (res.sembuh.concat(positifreg10))
+                    },
+                    {
+                        name: "Meninggal",
+                        data: (res.meninggal.concat(positifreg11))
+                    }
+                    ])
+                }
+            })
+
+        })
     });
 </script>
 <?= $this->endSection(); ?>

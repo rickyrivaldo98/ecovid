@@ -18,4 +18,11 @@ class DataAktualModel extends Model
         }
     }
 
+    public function getMingguTahun($params = '')
+    {
+        if (!$params || $params == '') {
+            return $this->select('minggudalamtahun,tahun')->orderBy('minggudalamtahun', 'DESC')->limit(1)->get()->getResult();
+        }
+    }
+
 }

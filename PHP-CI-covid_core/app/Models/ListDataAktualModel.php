@@ -24,17 +24,17 @@ class ListDataAktualModel extends Model{
     {
         if(!$id_kab || $id_kab == ''){
             $this->dt->select('id, puskesmas.`nama_puskesmas`,kab_kota.`nama_kab_kota`,tahun,minggudalamtahun,minggudalamtahunselanjutnya,positif,sembuh,meninggal');
-            $this->dt->join('puskesmas', 'data_aktual.`id_puskesmas`=data_aktual.`id_puskesmas`');
-            $this->dt->join('kab_kota', 'data_aktual.`id_kabupaten`=kab_kota.`id_kab_kota`');
+            $this->dt->join('puskesmas', 'data_aktual.`id_puskesmas`=puskesmas.`id_puskesmas`','left');
+            $this->dt->join('kab_kota', 'data_aktual.`id_kabupaten`=kab_kota.`id_kab_kota`','left');
         }else if($id_kab&&$id_pus){
             $this->dt->select('id, puskesmas.`nama_puskesmas`,kab_kota.`nama_kab_kota`,tahun,minggudalamtahun,minggudalamtahunselanjutnya,positif,sembuh,meninggal');
-            $this->dt->join('puskesmas', 'data_aktual.`id_puskesmas`=data_aktual.`id_puskesmas`');
-            $this->dt->join('kab_kota', 'data_aktual.`id_kabupaten`=kab_kota.`id_kab_kota`');
+            $this->dt->join('puskesmas', 'data_aktual.`id_puskesmas`=puskesmas.`id_puskesmas`','left');
+            $this->dt->join('kab_kota', 'data_aktual.`id_kabupaten`=kab_kota.`id_kab_kota`','left');
             $this->dt->where('id_puskesmas='.$id_pus);
         }else{
             $this->dt->select('id, puskesmas.`nama_puskesmas`,kab_kota.`nama_kab_kota`,tahun,minggudalamtahun,minggudalamtahunselanjutnya,positif,sembuh,meninggal');
-            $this->dt->join('puskesmas', 'data_aktual.`id_puskesmas`=data_aktual.`id_puskesmas`');
-            $this->dt->join('kab_kota', 'data_aktual.`id_kabupaten`=kab_kota.`id_kab_kota`');
+            $this->dt->join('puskesmas', 'data_aktual.`id_puskesmas`=puskesmas.`id_puskesmas`','left');
+            $this->dt->join('kab_kota', 'data_aktual.`id_kabupaten`=kab_kota.`id_kab_kota`','left');
             $this->dt->where('id_kabupaten='.$id_kab);
         }
         $i = 0;

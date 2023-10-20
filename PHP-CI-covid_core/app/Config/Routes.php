@@ -101,7 +101,15 @@ $routes->post('/dataaktual/listdata', 'ListDataAktual::listdata',[
     tambah-account,
     edit-account'
 ]);
+$routes->get('/dataaktual/editModal', 'ListDataAktual::editModal',[
+    'filter'=>'permission:menu-list-puskesmas,
+    tambah-account,
+    edit-account']);
 $routes->post('/dataaktual/deleteModal', 'ListDataAktual::deleteModal',[
+    'filter'=>'permission:menu-list-puskesmas,
+    tambah-account,
+    edit-account']);
+$routes->post('/dataaktual/editData/(:num)', 'ListDataAktual::editData/$1',[
     'filter'=>'permission:menu-list-puskesmas,
     tambah-account,
     edit-account']);

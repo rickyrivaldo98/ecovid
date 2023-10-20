@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ListDataAktualModel;
 use App\Models\DataAktualModel;
+use App\Models\ListPuskesmasModel;
 use Myth\Auth\Models\UserModel;
 use Myth\Auth\Password;
 use Config\Services;
@@ -15,16 +16,25 @@ class ListDataAktual extends BaseController
     // private $_myth_users;
     public function __construct()
     {
+        $this->_puskesmas = new ListPuskesmasModel();
         // $this->_aktual = new ListDataAktualModel();
         $this->_myth_users = new UserModel();
     }
     public function index()
     {
         // $data_aktual = $this->_aktual->getDatas();
+        $data_kabupaten = $this->_puskesmas->getKabupaten();
+        if (user() == null) {
+            $data_puskesmas = null;
+        } else {
+            $data_puskesmas = $this->_puskesmas->getPuskesmas(user()->id_kabupaten);
+        };
         $data['meta'] = [
             'title' => 'Data Aktual | Jateng Covid',
             'identifier'=>'is_list_data_aktual',
             'submenu_identity'=>'',
+            'data_kabupaten' => $data_kabupaten,
+            'data_puskesmas' => $data_puskesmas,
             // 'data_aktual'=>$data_aktual,
         ];
         return view('pages/listDataAktual',$data);
@@ -47,16 +57,21 @@ class ListDataAktual extends BaseController
                 $row[] = $list->nama_kab_kota;
                 $row[] = $list->tahun;
                 $row[] = $list->minggudalamtahun;
-                $row[] = $list->minggudalamtahunselanjutnya;
+                // $row[] = $list->minggudalamtahunselanjutnya;
                 $row[] = $list->positif;
                 $row[] = $list->sembuh;
                 $row[] = $list->meninggal;
                 $row[] = '                        <td class="flex flex-row justify-center items-center space-x-2">
+                <a href="#" type="button" data-id="'.$list->id.'" onclick="editData(this)"
+                    class="btn-popupz-edit text-center w-10 p-2 text-xs text-blue-600 bg-blue-200 rounded-md dark:text-blue-500 "><i
+                        class="fas fa-edit"></i>
+                </a>
                 <a href="#" type="button" data-id="'.$list->id.'" onclick="deleteData(this)"
                     class="btn-popupz text-center w-10  p-2 text-xs text-red-600 bg-red-200 rounded-md dark:text-red-500 "><i
                         class="fas fa-trash"></i>
                 </a>
             </td>';
+
                 $data[] = $row;
             }
             $output = [
@@ -67,6 +82,36 @@ class ListDataAktual extends BaseController
             ];
             echo json_encode($output);
         }
+    }
+    public function editData($id){
+        $dataaktual = new DataAktualModel();
+        if($this->request->getVar('grid-puskesmas2')){
+            $id_puskesmas = $this->request->getVar('grid-puskesmas2');
+        }else{
+            $id_puskesmas = $this->request->getVar('grid-puskesmas4');
+        }
+        $succeed = $dataaktual->update($id,[
+            // "NIK" => $this->request->getVar('grid-nik'),
+            "id_kabupaten" => $this->request->getVar('grid-kabupaten2'),
+            "id_puskesmas" => $id_puskesmas,
+            "tahun" => $this->request->getVar('grid-tahun'),
+            "minggudalamtahun" => $this->request->getVar('grid-minggu-tahun'),
+            "positif" => $this->request->getVar('grid-positif'),
+            "sembuh" => $this->request->getVar('grid-sembuh'),
+            "meninggal" => $this->request->getVar('grid-meninggal'),
+        ]);
+        if(!$succeed){
+            session()->setFlashdata('error','Data tidak berhasil diubah!');
+        }
+        session()->setFlashdata('success','Data berhasil diubah!');
+        return redirect()->to('/dataaktual');
+}
+    public function editModal(){
+        $dataaktual = new DataAktualModel();
+        $id_data = $this->request->getVar('data_id');
+        // $data_user = $this->_users->getUsers($id_data);
+        $data_aktual = $dataaktual->where('id', $id_data)->first();
+        return json_encode($data_aktual);
     }
     public function deleteData($id){
         $dataaktual = new DataAktualModel();

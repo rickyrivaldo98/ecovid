@@ -9,7 +9,7 @@ class DataAktualModel extends Model
     protected $table      = 'data_aktual';
     protected $primaryKey = 'id';
     // protected $useAutoIncrement = true;
-    protected $allowedFields = ['id', 'puskesmas.`nama_puskesmas`','kab_kota.`nama_kab_kota`','tahun','minggudalamtahun','minggudalamtahunselanjutnya','positif','sembuh','meninggal','created_at'];
+    protected $allowedFields = ['id', 'puskesmas.`nama_puskesmas`','kab_kota.`nama_kab_kota`','tahun','minggudalamtahun','minggudalamtahunselanjutnya','positif','sembuh','meninggal','created_at','updated_at','deleted_at'];
 
     public function getdatetime($params = '')
     {

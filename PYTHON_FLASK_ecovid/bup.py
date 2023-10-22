@@ -1,3 +1,8 @@
+
+
+
+
+
 from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 from tensorflow import keras
@@ -36,7 +41,7 @@ def regression(predict: str):
         body = request.json
         if predict == 'meninggal':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['sembuh'],
@@ -47,7 +52,7 @@ def regression(predict: str):
             return jsonify(prediksi[0])
         elif predict == 'sembuh':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['meninggal'],
@@ -58,7 +63,7 @@ def regression(predict: str):
             return jsonify(prediksi[0])
         elif predict == 'positif':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['sembuh'],
@@ -75,7 +80,7 @@ def bayesian(predict: str):
         body = request.json
         if predict == 'meninggal':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['sembuh'],
@@ -86,7 +91,7 @@ def bayesian(predict: str):
             return jsonify(prediksi[0])
         elif predict == 'sembuh':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['meninggal'],
@@ -97,7 +102,7 @@ def bayesian(predict: str):
             return jsonify(prediksi[0])
         elif predict == 'positif':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['sembuh'],
@@ -116,7 +121,7 @@ def ann(predict: str):
         body = request.json
         if predict == 'meninggal':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['sembuh'],
@@ -131,7 +136,7 @@ def ann(predict: str):
             return jsonify(prediksi[0])
         elif predict == 'sembuh':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['meninggal'],
@@ -146,7 +151,7 @@ def ann(predict: str):
             return jsonify(prediksi[0])
         elif predict == 'positif':
             testingX = [
-                body['minggu'],
+                # body['minggu'],
                 # body['ppkm'],
                 body['kabupaten'],
                 body['sembuh'],
@@ -171,28 +176,28 @@ def getPerformance():
     df =  pd.json_normalize(
         body,meta=[
             'id_kabupaten',
-            'minggudalamtahun',
+            # 'minggudalamtahun',
             'sembuh',
             'positif',
             'meninggal']
     )
     df = df.rename(columns={
         'id_kabupaten':'kabupaten',
-        'minggudalamtahun':'minggu',
+        # 'minggudalamtahun':'minggu',
         'sembuh':'sembuh',
         'positif':'total_kasus',
         'meninggal':'meninggal'
     }
     )
     df['kabupaten'] = df['kabupaten'].astype(str).astype(int)
-    df['minggu'] = df['minggu'].astype(str).astype(int)
+    # df['minggu'] = df['minggu'].astype(str).astype(int)
     df['sembuh'] = df['sembuh'].astype(str).astype(int)
     df['total_kasus'] = df['total_kasus'].astype(str).astype(int)
     df['meninggal'] = df['meninggal'].astype(str).astype(int)   
     # df['PPKM'] = 0
     def makeFeaturesFrame(feature):
         df_3 = df.copy()
-        df3 = df_3[['kabupaten','minggu','sembuh','meninggal','total_kasus']]
+        df3 = df_3[['kabupaten','sembuh','meninggal','total_kasus']]
         # df3 = df_3[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
         xFrame = df3.drop(feature,axis=1)
         yFrame = df3[feature]
@@ -201,7 +206,7 @@ def getPerformance():
     def SIR_makeFeaturesFrame(feature):
         df_3 = df.copy()
         n_population = int("819,785".replace(",", ""))
-        df_filter = df_3[['kabupaten','minggu','sembuh','meninggal','total_kasus']]
+        df_filter = df_3[['kabupaten','sembuh','meninggal','total_kasus']]
         # df_filter = df_3[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
         # df_filter["T"] = df_filter.loc[:, "minggu"]
         df_filter["S"] = n_population - df_filter.loc[:, "total_kasus"] - df_filter.loc[:, "meninggal"] - df_filter.loc[:, "sembuh"]
@@ -209,7 +214,7 @@ def getPerformance():
         df_filter["R"] = df_filter.loc[:, "meninggal"] + df_filter.loc[:, "sembuh"]
         df_filter[["x", "y", "z"]] = df_filter[["S", "I", "R"]] / n_population
         # df3 = df_filter[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
-        df3 = df_filter[['kabupaten','minggu','sembuh','meninggal','total_kasus']]
+        df3 = df_filter[['kabupaten','sembuh','meninggal','total_kasus']]
         xFrame = df3.drop(feature,axis=1)
         yFrame = df3[feature]
         return xFrame,yFrame
@@ -263,28 +268,28 @@ def retrain():
     df =  pd.json_normalize(
         body,meta=[
             'id_kabupaten',
-            'minggudalamtahun',
+            # 'minggudalamtahun',
             'sembuh',
             'positif',
             'meninggal']
     )
     df = df.rename(columns={
         'id_kabupaten':'kabupaten',
-        'minggudalamtahun':'minggu',
+        # 'minggudalamtahun':'minggu',
         'sembuh':'sembuh',
         'positif':'total_kasus',
         'meninggal':'meninggal'
     }
     )
     df['kabupaten'] = df['kabupaten'].astype(str).astype(int)
-    df['minggu'] = df['minggu'].astype(str).astype(int)
+    # df['minggu'] = df['minggu'].astype(str).astype(int)
     df['sembuh'] = df['sembuh'].astype(str).astype(int)
     df['total_kasus'] = df['total_kasus'].astype(str).astype(int)
     df['meninggal'] = df['meninggal'].astype(str).astype(int)   
     # df['PPKM'] = 0
     def makeFeaturesFrame(feature):
         df_3 = df.copy()
-        df3 = df_3[['kabupaten','minggu','sembuh','meninggal','total_kasus']]
+        df3 = df_3[['kabupaten','sembuh','meninggal','total_kasus']]
         # df3 = df_3[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
         xFrame = df3.drop(feature,axis=1)
         yFrame = df3[feature]
@@ -293,7 +298,7 @@ def retrain():
     def SIR_makeFeaturesFrame(feature):
         df_3 = df.copy()
         n_population = int("819,785".replace(",", ""))
-        df_filter = df_3[['kabupaten','minggu','sembuh','meninggal','total_kasus']]
+        df_filter = df_3[['kabupaten','sembuh','meninggal','total_kasus']]
         # df_filter = df_3[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
         # df_filter["T"] = df_filter.loc[:, "minggu"]
         df_filter["S"] = n_population - df_filter.loc[:, "total_kasus"] - df_filter.loc[:, "meninggal"] - df_filter.loc[:, "sembuh"]
@@ -301,7 +306,7 @@ def retrain():
         df_filter["R"] = df_filter.loc[:, "meninggal"] + df_filter.loc[:, "sembuh"]
         df_filter[["x", "y", "z"]] = df_filter[["S", "I", "R"]] / n_population
         # df3 = df_filter[['minggu','PPKM','kabupaten','sembuh','meninggal','total_kasus']]
-        df3 = df_filter[['kabupaten','minggu','sembuh','meninggal','total_kasus']]
+        df3 = df_filter[['kabupaten','sembuh','meninggal','total_kasus']]
         xFrame = df3.drop(feature,axis=1)
         yFrame = df3[feature]
         return xFrame,yFrame
@@ -448,7 +453,7 @@ def retrain():
     X_train, X_test, y_train, y_test = train_test_split(meninggal_index[0].values,meninggal_index[1].values,test_size=0.05,shuffle=False)
     annmodelmeninggal = Sequential([
         # Dense(2, activation='relu', input_shape=(2,)),
-        Dense(5, activation='relu', input_shape=(4,)),
+        Dense(5, activation='relu', input_shape=(3,)),
         Dense(9, activation='relu'),
         Dense(1,),
     ])
@@ -481,7 +486,7 @@ def retrain():
     X_train, X_test, y_train, y_test = train_test_split(positif_index[0].values,positif_index[1].values,test_size=0.05,shuffle=False)
     annmodelpositif = Sequential([
         # Dense(2, activation='relu', input_shape=(2,)),
-        Dense(5, activation='relu', input_shape=(4,)),
+        Dense(5, activation='relu', input_shape=(3,)),
         Dense(9, activation='relu'),
         Dense(1,),
     ])
@@ -514,7 +519,7 @@ def retrain():
     X_train, X_test, y_train, y_test = train_test_split(sembuh_index[0].values,sembuh_index[1].values,test_size=0.05,shuffle=False)
     annmodelsembuh = Sequential([
         # Dense(2, activation='relu', input_shape=(2,)),
-        Dense(5, activation='relu', input_shape=(4,)),
+        Dense(5, activation='relu', input_shape=(3,)),
         Dense(9, activation='relu'),
         Dense(1,),
     ])

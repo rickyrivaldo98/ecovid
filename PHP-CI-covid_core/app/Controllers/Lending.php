@@ -282,9 +282,9 @@ class Lending extends BaseController
     public function Prediksi()
     {
         $id_kabupaten = $this->request->getVar('grid-kabupaten3');
-        // $tahun = $this->request->getVar('grid-tahun-prediksi');
+        $tahun = $this->request->getVar('grid-tahun-prediksi');
         $minggudalamtahun = $this->request->getVar('grid-minggu-tahun-prediksi');
-        // $minggudalamtahunselanjutnya = $this->request->getVar('grid-minggu-tahun-selanjutnya-prediksi');
+        $minggudalamtahunselanjutnya = $this->request->getVar('grid-minggu-tahun-selanjutnya-prediksi');
         $positif = $this->request->getVar('grid-positif-prediksi');
         $sembuh = $this->request->getVar('grid-sembuh-prediksi');
         $meninggal = $this->request->getVar('grid-meninggal-prediksi');
@@ -435,9 +435,11 @@ class Lending extends BaseController
             "sembuh" => $sembuh,
             "meninggal" => $meninggal
         );
-
         session()->setFlashdata('kabupaten', $kabupatenprediksi);
         session()->setFlashdata('nilai', $output);
+        session()->setFlashdata('ttahun', $tahun);
+        session()->setFlashdata('tminggudalamtahun', $minggudalamtahun);
+        // session()->setFlashdata('tminggudalamtahunselanjutnya', $minggudalamtahunselanjutnya);
         return redirect()->to('/');
     }
 

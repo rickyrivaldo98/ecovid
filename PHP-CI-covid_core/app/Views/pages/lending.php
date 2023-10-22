@@ -379,14 +379,20 @@
                         <div>
                             <span class="flex items-center"><i class="fa-solid fa-cog fa-spin mr-2"></i>Hasil Prediksi
                                 Covid-19</span>
-                            <span id="hasil_prediksi" class="hidden flex items-center text-sm font-normal pl-6"></span>
-                            <script>
-                                var minggu_hasil = "<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>"
+                            <span id="hasil_prediksi" class="<?php if(!session()->getFlashData('tminggudalamtahun')){echo "hidden";}else{echo "flex";}?>  items-center text-sm font-normal pl-6">
+                                 <?php
+                                    if(session()->getFlashData('tminggudalamtahun')){
+                                        echo "Hasil Prediksi pada Minggu ke - ".session()->getFlashData('tminggudalamtahun')." Tahun ".session()->getFlashData('ttahun');
+                                    }
+                                 ?>
+                            </span>
+                            <!-- <script>
+                                var minggu_hasil = "$meta['data_minggu_tahun'][0]->minggudalamtahun ?>"
                                 minggu_hasil = parseInt(minggu_hasil) + 1;
-                                var tahun_hasil = "<?= $meta['data_minggu_tahun'][0]->tahun ?>"
+                                var tahun_hasil = " $meta['data_minggu_tahun'][0]->tahun ?>"
                                 document.querySelector('#hasil_prediksi').innerHTML = "Hasil Prediksi pada Minggu ke - " + minggu_hasil + " Tahun " + tahun_hasil
                                 
-                            </script>
+                            </script> -->
                         </div>
                         <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor"
                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -1540,7 +1546,7 @@
                             </div>
                         </div> -->
                     </div>
-                    <!-- <div class="flex flex-wrap -mx-3 mb-4">
+                    <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-tahun-prediksi">
@@ -1556,7 +1562,7 @@
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-prediksi">
-                                Masukkan Minggu Dalam Tahun
+                                Masukkan Minggu Dalam Tahun Selanjutnya
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -1568,7 +1574,7 @@
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya-prediksi">
-                                Masukkan Minggu Dalam Tahun Selanjutnya
+                                Masukkan Minggu Dalam Tahun 
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -1576,7 +1582,7 @@
                                 name="grid-minggu-tahun-selanjutnya-prediksi" type="text"
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -1655,7 +1661,7 @@
                 <div data-te-modal-body-ref class=" p-4">
                     <input type="hidden" id="grid-kabupaten3" name="grid-kabupaten3"
                         value="<?= user() != null ? user()->id_kabupaten : null ?>">
-                    <!-- <div class="flex flex-wrap -mx-3 mb-4">
+                    <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-tahun-prediksi">
@@ -1671,7 +1677,7 @@
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-prediksi">
-                                Masukkan Minggu Dalam Tahun
+                                Masukkan Minggu Dalam Tahun Selanjutnya
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -1683,7 +1689,7 @@
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya-prediksi">
-                                Masukkan Minggu Dalam Tahun Selanjutnya
+                                Masukkan Minggu Dalam Tahun 
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -1691,7 +1697,7 @@
                                 name="grid-minggu-tahun-selanjutnya-prediksi" type="text"
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -1770,7 +1776,7 @@
                 <div data-te-modal-body-ref class=" p-4">
                     <input type="hidden" id="grid-kabupaten3" name="grid-kabupaten3"
                         value="<?= user() != null ? user()->id_kabupaten : null ?>">
-                    <!-- <div class="flex flex-wrap -mx-3 mb-4">
+                    <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-tahun-prediksi">
@@ -1786,7 +1792,7 @@
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-prediksi">
-                                Masukkan Minggu Dalam Tahun
+                                Masukkan Minggu Dalam Tahun Selanjutnya
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -1798,7 +1804,7 @@
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya-prediksi">
-                                Masukkan Minggu Dalam Tahun Selanjutnya
+                                Masukkan Minggu Dalam Tahun 
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -1806,7 +1812,7 @@
                                 name="grid-minggu-tahun-selanjutnya-prediksi" type="text"
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -1959,7 +1965,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hidden flex flex-wrap -mx-3 mb-4">
+                    <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-tahun">
@@ -1968,7 +1974,7 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-tahun" name="grid-tahun" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" value="<?= date("Y")?>">
+                                autocomplete="off" autofill="off" placeholder="<?= date("Y")?>" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1983,16 +1989,16 @@
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
                         </div>
                     </div>
-                    <div class="hidden flex flex-wrap -mx-3 mb-4">
+                    <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya">
-                                Masukkan Minggu Dalam Tahun Selanjutnya
+                                Masukkan Minggu Dalam Tahun
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0">
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2131,7 +2137,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hidden flex flex-wrap -mx-3 mb-4">
+                    <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-tahun">
@@ -2140,7 +2146,7 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-tahun" name="grid-tahun" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" value="<?= date("Y")?>">
+                                autocomplete="off" autofill="off"  placeholder="<?= date("Y")?>" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2155,16 +2161,16 @@
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
                         </div>
                     </div>
-                    <div class="hidden flex flex-wrap -mx-3 mb-4">
+                    <div class="flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya">
-                                Masukkan Minggu Dalam Tahun Selanjutnya
+                                Masukkan Minggu Dalam Tahun 
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0">
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2258,7 +2264,7 @@
                 autofill="off">
                 <?= csrf_field() ?>
                 <div data-te-modal-body-ref class=" p-4">
-                    <div class="hidden flex flex-wrap -mx-3 mb-4">
+                    <div class=" flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-tahun">
@@ -2267,7 +2273,7 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-tahun" name="grid-tahun" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" value="<?= date("Y")?>">
+                                autocomplete="off" autofill="off" placeholder="<?= date("Y")?>" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2282,16 +2288,16 @@
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
                         </div>
                     </div>
-                    <div class="hidden flex flex-wrap -mx-3 mb-4">
+                    <div class=" flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya">
-                                Masukkan Minggu Dalam Tahun Selanjutnya
+                                Masukkan Minggu Dalam Tahun 
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0">
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">

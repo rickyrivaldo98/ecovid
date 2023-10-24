@@ -308,7 +308,7 @@
                     <div class="relative w-full pr-4 max-w-full flex-grow flex-1 ">
                         <div class="flex flex-col md:flex-row justify-between items-center px-4">
                             <div>
-                                <p class="mt-2 font-light lg:text-md">Silahkan Pilih Minggu dan Tahun
+                                <p class="mt-2 font-light lg:text-md">Silahkan Pilih Minggu dalam Tahun Selanjutnya
                                 </p>
                                 <form name="tanggal" id="tanggal" action="">
                                     <div class="flex flex-row mt-2 gap-2 justify-between">
@@ -1494,6 +1494,20 @@
                     </svg>
                 </button>
             </div>
+            <div class="items-center justify-between rounded-t-md  p-4 dark:border-opacity-50">
+                <div class="flex items-center p-4  text-sm text-yellow-800 rounded-lg bg-yellow-100 dark:bg-gray-800 dark:text-yellow-400"
+                    role="alert">
+                    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                        <span class="font-medium">Perhatikan!</span> Minggu Dalam Tahun Aktual Selanjutnya terakhir adalah <?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>.
+                    </div>
+                </div>
+            </div>
             <form action="/lending/prediksi" method="POST" class="w-full max-w-lg" autocomplete="off" autofill="off">
                 <?= csrf_field() ?>
                 <div data-te-modal-body-ref class=" p-4">
@@ -1656,6 +1670,20 @@
                     </svg>
                 </button>
             </div>
+            <div class="items-center justify-between rounded-t-md  p-4 dark:border-opacity-50">
+                <div class="flex items-center p-4  text-sm text-yellow-800 rounded-lg bg-yellow-100 dark:bg-gray-800 dark:text-yellow-400"
+                    role="alert">
+                    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                        <span class="font-medium">Perhatikan!</span> Minggu Dalam Tahun Aktual Selanjutnya terakhir adalah <?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>.
+                    </div>
+                </div>
+            </div>
             <form action="/lending/prediksi" method="POST" class="w-full max-w-lg" autocomplete="off" autofill="off">
                 <?= csrf_field() ?>
                 <div data-te-modal-body-ref class=" p-4">
@@ -1770,6 +1798,20 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
+            </div>
+            <div class="items-center justify-between rounded-t-md  p-4 dark:border-opacity-50">
+                <div class="flex items-center p-4  text-sm text-yellow-800 rounded-lg bg-yellow-100 dark:bg-gray-800 dark:text-yellow-400"
+                    role="alert">
+                    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Info</span>
+                    <div>
+                        <span class="font-medium">Perhatikan!</span> Minggu Dalam Tahun Aktual Selanjutnya terakhir adalah <?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>.
+                    </div>
+                </div>
             </div>
             <form action="/lending/prediksi" method="POST" class="w-full max-w-lg" autocomplete="off" autofill="off">
                 <?= csrf_field() ?>
@@ -1989,7 +2031,7 @@
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
                         </div>
                     </div>
-                    <div class="flex flex-wrap -mx-3 mb-4">
+                    <div class="hidden flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya">
@@ -1998,7 +2040,7 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2161,7 +2203,7 @@
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
                         </div>
                     </div>
-                    <div class="flex flex-wrap -mx-3 mb-4">
+                    <div class="hidden flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya">
@@ -2170,7 +2212,7 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off"  value="0">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2288,7 +2330,7 @@
                                 placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
                         </div>
                     </div>
-                    <div class=" flex flex-wrap -mx-3 mb-4">
+                    <div class="hidden flex flex-wrap -mx-3 mb-4">
                         <div class="w-full px-3">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="grid-minggu-tahun-selanjutnya">
@@ -2297,7 +2339,7 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0" required>
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">

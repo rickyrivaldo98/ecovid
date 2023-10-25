@@ -386,13 +386,12 @@
                                     }
                                  ?>
                             </span>
-                            <!-- <script>
-                                var minggu_hasil = "$meta['data_minggu_tahun'][0]->minggudalamtahun ?>"
-                                minggu_hasil = parseInt(minggu_hasil) + 1;
-                                var tahun_hasil = " $meta['data_minggu_tahun'][0]->tahun ?>"
-                                document.querySelector('#hasil_prediksi').innerHTML = "Hasil Prediksi pada Minggu ke - " + minggu_hasil + " Tahun " + tahun_hasil
-                                
-                            </script> -->
+                            <script>
+                                var minggu_predict_tt = []
+                                var minggu_predict_tt_lengkap = []
+                                var minggu_hasil = "<?=session()->getFlashData('tminggudalamtahun')?>"
+                                minggu_hasil = parseInt(minggu_hasil)
+                            </script>
                         </div>
                         <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor"
                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -454,7 +453,7 @@
                                                                 class="font-semibold text-xl text-white">
                                                                 <?php
                                                                     $positifreg2 = session()->getFlashData('nilai')['positif'];
-                                                                    echo array_sum($positifreg2);
+                                                                    echo ($positifreg2[sizeof($positifreg2)-1]);
                                                                     $positifreg2_old = session()->getFlashData('nilai')['positif'];
                                                                     ?>
                                                             </span>
@@ -484,11 +483,19 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-white mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($positifreg2_old))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($positifreg2_old))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($positifreg2_old[sizeof($positifreg2_old)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($positifreg2_old[sizeof($positifreg2_old)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                
                                                     <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($positifreg2_old))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                        $selisih = (float)($positifreg2_old[sizeof($positifreg2_old)-1]) -  (float)$positifreg2 ;
+
+                                                        if((float)($positifreg2_old[sizeof($positifreg2_old)-1])==0 || (float)($positifreg2_old[sizeof($positifreg2_old)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($positifreg2_old[sizeof($positifreg2_old)-1]))*100;
+                                                        }
+
+                                                        echo ($selisih == (float)($positifreg2_old[sizeof($positifreg2_old)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -546,7 +553,7 @@
                                                             <span class="font-semibold text-xl text-black">
                                                                 <?php
                                                                     $sembuhreg2 = session()->getFlashData('nilai')['sembuh'];
-                                                                    echo array_sum($sembuhreg2);
+                                                                    echo ($sembuhreg2[sizeof($sembuhreg2)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -577,11 +584,19 @@
                                             </div>
                                             
                                             <p class="text-sm text-black mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($sembuhreg2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($sembuhreg2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($sembuhreg2[sizeof($sembuhreg2)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($sembuhreg2[sizeof($sembuhreg2)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
                                                     <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($sembuhreg2))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                        $selisih = (float)($sembuhreg2[sizeof($sembuhreg2)-1]) -  (float)$positifreg2 ;
+
+                                                        if((float)($sembuhreg2[sizeof($sembuhreg2)-1])==0 || (float)($sembuhreg2[sizeof($sembuhreg2)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($sembuhreg2[sizeof($sembuhreg2)-1]))*100;
+                                                        }
+
+
+                                                        echo ($selisih == (float)($sembuhreg2[sizeof($sembuhreg2)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -639,7 +654,7 @@
                                                             <span class="font-semibold text-xl text-black">
                                                                 <?php
                                                                     $meninggalreg1 = session()->getFlashData('nilai')['meninggal'];
-                                                                    echo array_sum($meninggalreg1);
+                                                                    echo ($meninggalreg1[sizeof($meninggalreg1)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -669,11 +684,20 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($meninggalreg1))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($meninggalreg1))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($meninggalreg1[sizeof($meninggalreg1)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($meninggalreg1[sizeof($meninggalreg1)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                        
                                                     <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($meninggalreg1))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                        $selisih = (float)($meninggalreg1[sizeof($meninggalreg1)-1]) -  (float)$positifreg2 ;
+
+                                                        if((float)($meninggalreg1[sizeof($meninggalreg1)-1])==0 || (float)($meninggalreg1[sizeof($meninggalreg1)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($meninggalreg1[sizeof($meninggalreg1)-1]))*100;
+                                                        }
+
+
+                                                        echo ($selisih == (float)($meninggalreg1[sizeof($meninggalreg1)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -738,7 +762,7 @@
                                                             <span class="font-semibold text-xl text-white">
                                                                 <?php
                                                                     $positifann2 = session()->getFlashData('nilai')['positif'];
-                                                                    echo array_sum($positifann2);
+                                                                    echo ($positifann2[sizeof($positifann2)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -780,11 +804,20 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-white mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($positifann2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($positifann2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
-                                                    <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($positifann2))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($positifann2[sizeof($positifann2)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($positifann2[sizeof($positifann2)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    
+                                                     <?php 
+                                                        $selisih = (float)($positifann2[sizeof($positifann2)-1]) -  (float)$positifreg2 ;
+                                                        
+                                                        if((float)($positifann2[sizeof($positifann2)-1])==0 || (float)($positifann2[sizeof($positifann2)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($positifann2[sizeof($positifann2)-1]))*100;
+                                                        }
+
+                                                        
+                                                        echo ($selisih == (float)($positifann2[sizeof($positifann2)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -843,7 +876,7 @@
                                                             <span class="font-semibold text-xl text-black">
                                                                 <?php
                                                                     $sembuhann2 = session()->getFlashData('nilai')['sembuh'];
-                                                                    echo array_sum($sembuhann2);
+                                                                    echo ($sembuhann2[sizeof($sembuhann2)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -884,11 +917,20 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($sembuhann2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($sembuhann2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($sembuhann2[sizeof($sembuhann2)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($sembuhann2[sizeof($sembuhann2)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                    
                                                     <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($sembuhann2))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                        $selisih = (float)($sembuhann2[sizeof($sembuhann2)-1]) -  (float)$positifreg2 ;
+                                                        
+                                                        if((float)($sembuhann2[sizeof($sembuhann2)-1])==0 || (float)($sembuhann2[sizeof($sembuhann2)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($sembuhann2[sizeof($sembuhann2)-1]))*100;
+                                                        }
+
+                                                        
+                                                        echo ($selisih == (float)($sembuhann2[sizeof($sembuhann2)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -946,7 +988,7 @@
                                                             <span class="font-semibold text-xl text-black">
                                                                 <?php
                                                                     $meninggalann2 = session()->getFlashData('nilai')['meninggal'];
-                                                                    echo array_sum($meninggalann2);
+                                                                    echo ($meninggalann2[sizeof($meninggalann2)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -987,11 +1029,18 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($meninggalann2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($meninggalann2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($meninggalann2[sizeof($meninggalann2)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($meninggalann2[sizeof($meninggalann2)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
                                                     <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($meninggalann2))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                        $selisih = (float)($meninggalann2[sizeof($meninggalann2)-1]) -  (float)$positifreg2 ;
+                                                        
+                                                        if((float)($meninggalann2[sizeof($meninggalann2)-1])==0 || (float)($meninggalann2[sizeof($meninggalann2)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($meninggalann2[sizeof($meninggalann2)-1]))*100;
+                                                        }
+                                                        
+                                                        echo ($selisih == (float)($meninggalann2[sizeof($meninggalann2)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -1056,7 +1105,7 @@
                                                             <span class="font-semibold text-xl text-white">
                                                                 <?php
                                                                     $positifseir2 = session()->getFlashData('nilai')['positif'];
-                                                                    echo array_sum($positifseir2);
+                                                                    echo ($positifseir2[sizeof($positifseir2)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -1096,11 +1145,19 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-white mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($positifseir2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($positifseir2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($positifseir2[sizeof($positifseir2)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($positifseir2[sizeof($positifseir2)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                   
                                                     <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($positifseir2))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                        $selisih = (float)($positifseir2[sizeof($positifseir2)-1]) -  (float)$positifreg2 ;
+                                                       
+                                                        if((float)($positifseir2[sizeof($positifseir2)-1])==0 || (float)($positifseir2[sizeof($positifseir2)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($positifseir2[sizeof($positifseir2)-1]))*100;
+                                                        }
+                                                        
+                                                        echo ($selisih == (float)($positifseir2[sizeof($positifseir2)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -1158,7 +1215,7 @@
                                                             <span class="font-semibold text-xl text-black">
                                                                 <?php
                                                                     $sembuhseir2 = session()->getFlashData('nilai')['sembuh'];
-                                                                    echo array_sum($sembuhseir2);
+                                                                    echo ($sembuhseir2[sizeof($sembuhseir2)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -1198,11 +1255,20 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($sembuhseir2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($sembuhseir2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($sembuhseir2[sizeof($sembuhseir2)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($sembuhseir2[sizeof($sembuhseir2)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                   
                                                     <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($sembuhseir2))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                        $selisih = (float)($sembuhseir2[sizeof($sembuhseir2)-1]) -  (float)$positifreg2 ;
+                                                        
+                                                        if((float)($sembuhseir2[sizeof($sembuhseir2)-1])==0 || (float)($sembuhseir2[sizeof($sembuhseir2)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($sembuhseir2[sizeof($sembuhseir2)-1]))*100;
+                                                        }
+                                                        
+                                                        
+                                                        echo ($selisih == (float)($sembuhseir2[sizeof($sembuhseir2)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -1260,7 +1326,7 @@
                                                             <span class="font-semibold text-xl text-black">
                                                                 <?php
                                                                     $meninggalseir2 = session()->getFlashData('nilai')['meninggal'];
-                                                                    echo array_sum($meninggalseir2);
+                                                                    echo ($meninggalseir2[sizeof($meninggalseir2)-1]);
                                                                     ?>
                                                             </span>
                                                         </div>
@@ -1301,11 +1367,19 @@
                                                 </div>
                                             </div>
                                             <p class="text-sm text-black mt-4">
-                                                <span class="<?php echo ((float)$positifreg2 < (float)array_sum($meninggalseir2))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
-                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)array_sum($meninggalseir2))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
-                                                    <?php 
-                                                        $kenaikan = ((float)$positifreg2/(float)array_sum($meninggalseir2))*100;
-                                                        echo ($kenaikan == 0 )?'100%':round($kenaikan,2).'%';
+                                                <span class="<?php echo ((float)$positifreg2 < (float)($meninggalseir2[sizeof($meninggalseir2)-1]))? 'text-red-500': 'text-emerald-500'; ?> mr-2">
+                                                    <i class="fas  <?php echo ((float)$positifreg2 < (float)($meninggalseir2[sizeof($meninggalseir2)-1]))? 'fa-arrow-down': 'fa-arrow-up'; ?>"></i> 
+                                                   
+                                                     <?php 
+                                                        $selisih = (float)($meninggalseir2[sizeof($meninggalseir2)-1]) -  (float)$positifreg2 ;
+                                                        if((float)($meninggalseir2[sizeof($meninggalseir2)-1])==0 || (float)($meninggalseir2[sizeof($meninggalseir2)-1])==0.0){
+                                                            $kenaikan = ($selisih/1)*100;
+                                                        }else{
+                                                            $kenaikan = ($selisih/(float)($meninggalseir2[sizeof($meninggalseir2)-1]))*100;
+                                                        }
+                                                        
+                                                        
+                                                        echo ($selisih == (float)($meninggalseir2[sizeof($meninggalseir2)-1]) )?'100%':abs(round($kenaikan,2)).'%';
                                                     ?> 
                                                 </span>
                                                 <span class="whitespace-nowrap text-xs">
@@ -1568,8 +1642,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-tahun-prediksi" name="grid-tahun-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-tahun-prediksi" name="grid-tahun-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" minlength="4" maxlength="4" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1580,8 +1654,13 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun-prediksi" name="grid-minggu-tahun-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-minggu-tahun-prediksi" name="grid-minggu-tahun-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$"  required max="<?php 
+                                    $batas = (int)($meta['data_minggu_tahun'][0]->minggudalamtahun);
+                                    echo $batas + 5;
+
+                                ?>"  oninvalid="this.setCustomValidity('<?='Data Aktual Minggu ke-'.($batas+1).' belum terinput, batas toleransi prediksi kedepan adalah 5 minggu setelah data aktual terakhir (Minggu ke-'.($batas + 5).') untuk menjaga performa'?>')"
+                                oninput="this.setCustomValidity('')">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1593,8 +1672,8 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya-prediksi"
-                                name="grid-minggu-tahun-selanjutnya-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                name="grid-minggu-tahun-selanjutnya-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1605,8 +1684,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-positif-prediksi" name="grid-positif-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-positif-prediksi" name="grid-positif-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1617,8 +1696,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-sembuh-prediksi" name="grid-sembuh-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-sembuh-prediksi" name="grid-sembuh-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1629,8 +1708,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-meninggal-prediksi" name="grid-meninggal-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-meninggal-prediksi" name="grid-meninggal-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
 
@@ -1697,8 +1776,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-tahun-prediksi" name="grid-tahun-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-tahun-prediksi" name="grid-tahun-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" minlength="4" maxlength="4" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1709,8 +1788,13 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun-prediksi" name="grid-minggu-tahun-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-minggu-tahun-prediksi" name="grid-minggu-tahun-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required max="<?php 
+                                    $batas = (int)($meta['data_minggu_tahun'][0]->minggudalamtahun);
+                                    echo $batas + 5;
+
+                                ?>"  oninvalid="this.setCustomValidity('<?='Data Aktual Minggu ke-'.($batas+1).' belum terinput, batas toleransi prediksi kedepan adalah 5 minggu setelah data aktual terakhir (Minggu ke-'.($batas + 5).')  untuk menjaga performa'?>')"
+                                oninput="this.setCustomValidity('')">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1722,8 +1806,8 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya-prediksi"
-                                name="grid-minggu-tahun-selanjutnya-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                name="grid-minggu-tahun-selanjutnya-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1734,8 +1818,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-positif-prediksi" name="grid-positif-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-positif-prediksi" name="grid-positif-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1746,8 +1830,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-sembuh-prediksi" name="grid-sembuh-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-sembuh-prediksi" name="grid-sembuh-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1758,8 +1842,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-meninggal-prediksi" name="grid-meninggal-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-meninggal-prediksi" name="grid-meninggal-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
 
@@ -1826,8 +1910,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-tahun-prediksi" name="grid-tahun-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-tahun-prediksi" name="grid-tahun-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" minlength="4" maxlength="4" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1838,8 +1922,13 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun-prediksi" name="grid-minggu-tahun-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-minggu-tahun-prediksi" name="grid-minggu-tahun-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required max="<?php 
+                                    $batas = (int)($meta['data_minggu_tahun'][0]->minggudalamtahun);
+                                    echo $batas + 5;
+
+                                ?>"  oninvalid="this.setCustomValidity('<?='Data Aktual Minggu ke-'.($batas+1).' belum terinput, batas toleransi prediksi kedepan adalah 5 minggu setelah data aktual terakhir (Minggu ke-'.($batas + 5).')  untuk menjaga performa'?>')"
+                                oninput="this.setCustomValidity('')">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1851,8 +1940,8 @@
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                 id="grid-minggu-tahun-selanjutnya-prediksi"
-                                name="grid-minggu-tahun-selanjutnya-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                name="grid-minggu-tahun-selanjutnya-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1863,8 +1952,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-positif-prediksi" name="grid-positif-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-positif-prediksi" name="grid-positif-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1875,8 +1964,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-sembuh-prediksi" name="grid-sembuh-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-sembuh-prediksi" name="grid-sembuh-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -1887,8 +1976,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-meninggal-prediksi" name="grid-meninggal-prediksi" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-meninggal-prediksi" name="grid-meninggal-prediksi" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
 
@@ -2015,8 +2104,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-tahun" name="grid-tahun" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" placeholder="<?= date("Y")?>" required>
+                                id="grid-tahun" name="grid-tahun" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" placeholder="<?= date("Y")?>"  pattern="^[0-9]*$" minlength="4" maxlength="4" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2027,8 +2116,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun" name="grid-minggu-tahun" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
+                                id="grid-minggu-tahun" name="grid-minggu-tahun" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="hidden flex flex-wrap -mx-3 mb-4">
@@ -2039,8 +2128,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0">
+                                id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" value="0">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2051,8 +2140,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-positif" name="grid-positif" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" required>
+                                id="grid-positif" name="grid-positif" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2063,8 +2152,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-sembuh" name="grid-sembuh" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" required>
+                                id="grid-sembuh" name="grid-sembuh" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2075,8 +2164,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-meninggal" name="grid-meninggal" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-meninggal" name="grid-meninggal" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                 </div>
@@ -2187,8 +2276,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-tahun" name="grid-tahun" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off"  placeholder="<?= date("Y")?>" required>
+                                id="grid-tahun" name="grid-tahun" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off"  placeholder="<?= date("Y")?>"  pattern="^[0-9]*$" minlength="4" maxlength="4" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2199,8 +2288,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun" name="grid-minggu-tahun" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
+                                id="grid-minggu-tahun" name="grid-minggu-tahun" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="hidden flex flex-wrap -mx-3 mb-4">
@@ -2211,8 +2300,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off"  value="0">
+                                id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" value="0">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2223,8 +2312,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-positif" name="grid-positif" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" required>
+                                id="grid-positif" name="grid-positif" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2235,8 +2324,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-sembuh" name="grid-sembuh" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" required>
+                                id="grid-sembuh" name="grid-sembuh" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2247,8 +2336,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-meninggal" name="grid-meninggal" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-meninggal" name="grid-meninggal" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                 </div>
@@ -2314,8 +2403,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-tahun" name="grid-tahun" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" placeholder="<?= date("Y")?>" required>
+                                id="grid-tahun" name="grid-tahun" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" placeholder="<?= date("Y")?>" pattern="^[0-9]*$" minlength="4" maxlength="4" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2326,8 +2415,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun" name="grid-minggu-tahun" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" required>
+                                id="grid-minggu-tahun" name="grid-minggu-tahun" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" min="<?= $meta['data_minggu_tahun'][0]->minggudalamtahun ?>" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="hidden flex flex-wrap -mx-3 mb-4">
@@ -2338,8 +2427,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" value="0">
+                                id="grid-minggu-tahun-selanjutnya" name="grid-minggu-tahun-selanjutnya" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" value="0">
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2350,8 +2439,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-positif" name="grid-positif" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" required>
+                                id="grid-positif" name="grid-positif" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2362,8 +2451,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-sembuh" name="grid-sembuh" type="text" placeholder="Silahkan Masukkan Angka"
-                                autocomplete="off" autofill="off" required>
+                                id="grid-sembuh" name="grid-sembuh" type="number" placeholder="Silahkan Masukkan Angka"
+                                autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                     <div class="flex flex-wrap -mx-3 mb-4">
@@ -2374,8 +2463,8 @@
                             </label>
                             <input
                                 class="appearance-none block w-full bg-bgFormSoft text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-meninggal" name="grid-meninggal" type="text"
-                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" required>
+                                id="grid-meninggal" name="grid-meninggal" type="number"
+                                placeholder="Silahkan Masukkan Angka" autocomplete="off" autofill="off" pattern="^[0-9]*$" required>
                         </div>
                     </div>
                 </div>
@@ -2961,16 +3050,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
     }
     var chartPositifRegresi = new ApexCharts(document.querySelector("#positif_chart_regresi"), optionPositifRegresi);
@@ -3006,16 +3086,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
 
     }
@@ -3052,16 +3123,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
     }
     var chartMeninggalRegresi = new ApexCharts(document.querySelector("#meninggal_chart_regresi"), optionMeninggalRegresi);
@@ -3100,16 +3162,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
     }
     var chartPositifAnn = new ApexCharts(document.querySelector("#positif_chart_ann"), optionPositifAnn);
@@ -3145,16 +3198,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
     }
     var chartSembuhAnn = new ApexCharts(document.querySelector("#sembuh_chart_ann"), optionSembuhAnn);
@@ -3190,16 +3234,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
     }
     var chartMeninggalAnn = new ApexCharts(document.querySelector("#meninggal_chart_ann"), optionMeninggalAnn);
@@ -3239,16 +3274,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
     }
     var chartPositifSier = new ApexCharts(document.querySelector("#positif_chart_sier"), optionPositifSier);
@@ -3284,16 +3310,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
     }
     var chartSembuhSier = new ApexCharts(document.querySelector("#sembuh_chart_sier"), optionSembuhSier);
@@ -3329,16 +3346,7 @@
             show: false
         },
         xaxis: {
-            categories: [
-                "M1",
-                "M2",
-                "M3",
-                "M4",
-                "M5",
-                "M6",
-                "M7",
-                "M8"
-            ]
+            categories: minggu_predict_tt
         }
 
     }
@@ -3371,17 +3379,9 @@
         yaxis: {
             show: false
         },
-        // xaxis: {
-        //     categories: [
-        //         "1",
-        //         "2",
-        //         "3",
-        //         "4",
-        //         "5",
-        //         "6",
-        //         "7"
-        //     ]
-        // }
+        xaxis: {
+            categories: minggu_predict_tt_lengkap
+        }
     }
     var chartgrafikreportregresi = new ApexCharts(document.querySelector("#grafik_report_regresi"), optiongrafikreportregresi);
     chartgrafikreportregresi.render();
@@ -3408,17 +3408,9 @@
         yaxis: {
             show: false
         },
-        // xaxis: {
-        //     categories: [
-        //         "1",
-        //         "2",
-        //         "3",
-        //         "4",
-        //         "5",
-        //         "6",
-        //         "7"
-        //     ]
-        // }
+        xaxis: {
+            categories:minggu_predict_tt_lengkap
+        }
     }
     var chartgrafikreportann = new ApexCharts(document.querySelector("#grafik_report_ann"), optiongrafikreportann);
     chartgrafikreportann.render();
@@ -3445,17 +3437,9 @@
         yaxis: {
             show: false
         },
-        // xaxis: {
-        //     categories: [
-        //         "1",
-        //         "2",
-        //         "3",
-        //         "4",
-        //         "5",
-        //         "6",
-        //         "7"
-        //     ]
-        // }
+        xaxis: {
+            categories: minggu_predict_tt_lengkap
+        }
     }
     var chartgrafikreportsier = new ApexCharts(document.querySelector("#grafik_report_sier"), optiongrafikreportsier);
     chartgrafikreportsier.render();
@@ -3492,15 +3476,26 @@
         $.ajax({
             type: "GET",
             url: '<?php echo base_url(); ?>lending/dataaktual',
+            data:{
+                'id_kab': "<?php echo user()->id_kabupaten?>",
+                'role':"<?=(get_role(user()->id)[0]->name) ?>",
+                'minggudalamtahun': "<?=session()->getFlashData('tminggudalamtahun')?>"
+            },
             dataType: "json",
             async: true,
             cache: false,
             success: function (res) {
-                // console.log(chartDataAktual)
-                // console.log(res.positif[res.positif.length - 1])
-                let sumpositif = res.positif[res.positif.length - 1];
-                let sumsembuh = res.sembuh[res.sembuh.length - 1];
-                let summeninggal = res.meninggal[res.meninggal.length - 1];
+                minggu_ajax = res.minggudalamtahun_predict
+                minggu_ajax.forEach((val,idx)=>{
+                    minggu_predict_tt.push(parseInt(val))
+                    minggu_predict_tt_lengkap.push('Minggu Ke - '+(parseInt(val)))
+                })
+                minggu_predict_tt.push(minggu_hasil)
+                minggu_predict_tt_lengkap.push('Minggu Ke - '+minggu_hasil)
+
+                let sumpositif = res.positif_jateng[res.positif_jateng.length - 1];
+                let sumsembuh = res.sembuh_jateng[res.sembuh_jateng.length - 1];
+                let summeninggal = res.meninggal_jateng[res.meninggal_jateng.length - 1];
                 let minggu = res.minggudalamtahun
                 let minggudalamtahun = []
                 minggu.forEach((arr, idx) => {
@@ -3687,44 +3682,244 @@
                 ])
                 chartgrafikreportregresi.updateSeries([{
                     name: "Positif",
-                    data: (res.positif.concat(positifreg3))
+                    data: (res.positif_predict.concat(positifreg3))
                 },
                 {
                     name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg4))
+                    data: (res.sembuh_predict.concat(positifreg4))
                 },
                 {
                     name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg5))
+                    data: (res.meninggal_predict.concat(positifreg5))
                 }
                 ])
+                chartgrafikreportregresi.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartgrafikreportann.updateSeries([{
                     name: "Positif",
-                    data: (res.positif.concat(positifreg6))
+                    data: (res.positif_predict.concat(positifreg6))
                 },
                 {
                     name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg7))
+                    data: (res.sembuh_predict.concat(positifreg7))
                 },
                 {
                     name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg8))
+                    data: (res.meninggal_predict.concat(positifreg8))
                 }
                 ])
+                chartgrafikreportann.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartgrafikreportsier.updateSeries([{
                     name: "Positif",
-                    data: (res.positif.concat(positifreg9))
+                    data: (res.positif_predict.concat(positifreg9))
                 },
                 {
                     name: "Sembuh",
-                    data: (res.sembuh.concat(positifreg10))
+                    data: (res.sembuh_predict.concat(positifreg10))
                 },
                 {
                     name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg11))
+                    data: (res.meninggal_predict.concat(positifreg11))
                 }
                 ])
-
+                chartgrafikreportsier.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
 
                 const arraypositifregresi = res.positif
                 const arraysembuhregresi = res.sembuh
@@ -3735,19 +3930,94 @@
                 // console.log(arraypositifann)
                 chartPositifRegresi.updateSeries([{
                     name: "Positif",
-                    data: (res.positif.concat(positifreg3))
+                    data: (res.positif_predict.concat(positifreg3))
                 }, {
                     name: "Reprediksi",
                     data: (repositifreg3)
                 }, ])
+                chartPositifRegresi.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartPositifRegresi2.updateSeries([{
                     name: "Positif",
-                    data: (res.positif.concat(positifreg3))
+                    data: (res.positif_predict.concat(positifreg3))
                 }, {
                     name: "Reprediksi",
                     data: (repositifreg3)
                 }, ])
-
+                chartPositifRegresi2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 // chartgrafikreportregresi.updateSeries([{
                 //     name: "Positif",
                 //     data: (res.positif.concat(positifreg3))
@@ -3756,150 +4026,756 @@
                 // arraysembuhregresi.push("20")
                 chartSembuhRegresi.updateSeries([{
                         name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg4))
+                        data: (res.sembuh_predict.concat(positifreg4))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg4)
                     },
 
                 ])
+                chartSembuhRegresi.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartSembuhRegresi2.updateSeries([{
                         name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg4))
+                        data: (res.sembuh_predict.concat(positifreg4))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg4)
                     },
 
                 ])
+                chartSembuhRegresi2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 // arraymeninggalregresi.push("20")
                 chartMeninggalRegresi.updateSeries([{
                         name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg5))
+                        data: (res.meninggal_predict.concat(positifreg5))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg5)
                     },
 
                 ])
+                chartMeninggalRegresi.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartMeninggalRegresi2.updateSeries([{
                     name: "Meninggal",
-                    data: (res.meninggal.concat(positifreg5))
+                    data: (res.meninggal_predict.concat(positifreg5))
                 }, {
                     name: "Reprediksi",
                     data: (repositifreg5)
                 }, ])
-
+                chartMeninggalRegresi2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
 
                 // arraypositifann.push("20")
                 // arraypositifann.push("20")
                 chartPositifAnn.updateSeries([{
                     name: "Positif",
-                    data: (res.positif.concat(positifreg6))
+                    data: (res.positif_predict.concat(positifreg6))
                 }, {
                     name: "Reprediksi",
                     data: (repositifreg6)
                 }, ])
+                chartPositifAnn.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartPositifAnn2.updateSeries([{
                         name: "Positif",
-                        data: (res.positif.concat(positifreg6))
+                        data: (res.positif_predict.concat(positifreg6))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg6)
                     },
 
                 ])
+                chartPositifAnn2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartSembuhAnn.updateSeries([{
                         name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg7))
+                        data: (res.sembuh_predict.concat(positifreg7))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg7)
                     },
 
                 ])
+                chartSembuhAnn.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartSembuhAnn2.updateSeries([{
                         name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg7))
+                        data: (res.sembuh_predict.concat(positifreg7))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg7)
                     },
 
                 ])
+                chartSembuhAnn2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartMeninggalAnn.updateSeries([{
                         name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg8))
+                        data: (res.meninggal_predict.concat(positifreg8))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg8)
                     },
 
                 ])
+                chartMeninggalAnn.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartMeninggalAnn2.updateSeries([{
                         name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg8))
+                        data: (res.meninggal_predict.concat(positifreg8))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg8)
                     },
 
                 ])
+                chartMeninggalAnn2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartPositifSier.updateSeries([{
                         name: "Positif",
-                        data: (res.positif.concat(positifreg9))
+                        data: (res.positif_predict.concat(positifreg9))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg9)
                     },
 
                 ])
+                chartPositifSier.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartPositifSier2.updateSeries([{
                         name: "Positif",
-                        data: (res.positif.concat(positifreg9))
+                        data: (res.positif_predict.concat(positifreg9))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg9)
                     },
 
                 ])
+                chartPositifSier2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartSembuhSier.updateSeries([{
                         name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg10))
+                        data: (res.sembuh_predict.concat(positifreg10))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg10)
                     },
 
                 ])
+                chartSembuhSier.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartSembuhSier2.updateSeries([{
                         name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg10))
+                        data: (res.sembuh_predict.concat(positifreg10))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg10)
                     },
 
                 ])
+                chartSembuhSier2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 chartMeninggalSier.updateSeries([{
                         name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg11))
+                        data: (res.meninggal_predict.concat(positifreg11))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg11)
                     },
 
                 ])
+                chartMeninggalSier.updateOptions({
+                    xaxis: {
+                        categories: minggu_predict_tt,
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    
+                })
                 chartMeninggalSier2.updateSeries([{
                         name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg11))
+                        data: (res.meninggal_predict.concat(positifreg11))
                     }, {
                         name: "Reprediksi",
                         data: (repositifreg11)
                     },
 
                 ])
-
+                    chartMeninggalSier2.updateOptions({
+                    dataLabels: {
+                        enabled: true,
+                        // formatter: function (val) {
+                        //     return val + " Individu";
+                        // },
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 5,
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
+                    },
+                    xaxis: {
+                        categories: minggu_predict_tt_lengkap,
+                        labels: {
+                            style: {
+                                colors: '#008FFB',
+                            }
+                        },
+                    },
+                    yaxis: [
+                        {
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true,
+                                color: '#008FFB'
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#008FFB',
+                                }
+                            },
+                            title: {
+                                text: " Individu",
+                                style: {
+                                    color: '#008FFB',
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        }
+                    ],
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val + " Individu"
+                            }
+                        }
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        }
+                    }],
+                })
                 if(positifreg4 && positifreg4!=''){
                                     if(document.querySelector('#hasil_prediksi').classList.contains('hidden')){
                                         document.querySelector('#hasil_prediksi').classList.remove('hidden')
@@ -4148,6 +5024,11 @@
             $.ajax({
                 type: "GET",
                 url: '<?php echo base_url(); ?>lending/dataaktual',
+                data:{
+                    'id_kab': "<?php echo user()->id_kabupaten?>",
+                    'role':"<?=(get_role(user()->id)[0]->name) ?>",
+                    'minggudalamtahun': "<?=session()->getFlashData('tminggudalamtahun')?>"
+                },
                 dataType: "json",
                 async: true,
                 cache: false,
@@ -4318,45 +5199,7 @@
                         data: (res.meninggal)
                     }
                     ])
-                    chartgrafikreportregresi.updateSeries([{
-                        name: "Positif",
-                        data: (res.positif.concat(positifreg3))
-                    },
-                    {
-                        name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg4))
-                    },
-                    {
-                        name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg5))
-                    }
-                    ])
-                    chartgrafikreportann.updateSeries([{
-                        name: "Positif",
-                        data: (res.positif.concat(positifreg6))
-                    },
-                    {
-                        name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg7))
-                    },
-                    {
-                        name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg8))
-                    }
-                    ])
-                    chartgrafikreportsier.updateSeries([{
-                        name: "Positif",
-                        data: (res.positif.concat(positifreg9))
-                    },
-                    {
-                        name: "Sembuh",
-                        data: (res.sembuh.concat(positifreg10))
-                    },
-                    {
-                        name: "Meninggal",
-                        data: (res.meninggal.concat(positifreg11))
-                    }
-                    ])
+                    
                 }
             })
 

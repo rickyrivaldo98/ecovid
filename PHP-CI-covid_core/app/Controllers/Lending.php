@@ -291,6 +291,7 @@ class Lending extends BaseController
 
         $kabupatenprediksi  = $this->_puskesmas->getKabupatenid($id_kabupaten);
 
+        session()->setFlashdata('tminggudalamtahun', $minggudalamtahun);
         // $dataall = $this->_myth_datas->getAll();
         // print_r(json_encode($dataall));
         // $semuadata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/test', json_encode($dataall));
@@ -362,7 +363,8 @@ class Lending extends BaseController
         //     print_r(round($float));
         // }
         // print_r($data);
-        $getsumkab = $this->_myth_datas->getsumkab($id_kabupaten);
+
+        $getsumkab = $this->_myth_datas->getsumkab($id_kabupaten,((int)$minggudalamtahun)-1,((int)$minggudalamtahun)-7);
 
         $regressionpositifhistory = array();
         $regressionmeninggalhistory = array();
@@ -421,7 +423,7 @@ class Lending extends BaseController
         session()->setFlashdata('reprediksi', $hasilrepredik);
 
 
-        $getsumkab = $this->_myth_datas->getsumkab($id_kabupaten);
+        $getsumkab = $this->_myth_datas->getsumkab($id_kabupaten,((int)$minggudalamtahun)-1,((int)$minggudalamtahun)-7);
         $positif = array();
         $sembuh = array();
         $meninggal = array();
@@ -438,7 +440,7 @@ class Lending extends BaseController
         session()->setFlashdata('kabupaten', $kabupatenprediksi);
         session()->setFlashdata('nilai', $output);
         session()->setFlashdata('ttahun', $tahun);
-        session()->setFlashdata('tminggudalamtahun', $minggudalamtahun);
+        
         // session()->setFlashdata('tminggudalamtahunselanjutnya', $minggudalamtahunselanjutnya);
         return redirect()->to('/');
     }
@@ -446,23 +448,57 @@ class Lending extends BaseController
 
     public function Data_aktual()
     {
+        $minggudalamtahun = $this->request->getVar('minggudalamtahun');
+        $id_kab = $this->request->getVar('id_kab');
+        $role = $this->request->getVar('role');
         $data = $this->_myth_datas->getTotal();
+        $data_jateng = $this->_myth_datas->getTotal(((int)$minggudalamtahun)-1,((int)$minggudalamtahun)-7);
+        if($role=='superAdmin'){
+            $data_predict = $this->_myth_datas->getTotal(((int)$minggudalamtahun)-1,((int)$minggudalamtahun)-7);
+        }else{
+            $data_predict = $this->_myth_datas->getsumkab($id_kab,((int)$minggudalamtahun)-1,((int)$minggudalamtahun)-7);
+        }
 
         $positif = array();
         $sembuh = array();
         $meninggal = array();
+        $positif_predict = array();
+        $sembuh_predict = array();
+        $meninggal_predict = array();
+        $positif_jateng = array();
+        $sembuh_jateng = array();
+        $meninggal_jateng = array();
         $minggudalamtahun = array();
+        $minggudalamtahun_predict = array();
         foreach ($data as $dataaktual) {
             $positif[] = $dataaktual->positif;
             $sembuh[] = $dataaktual->sembuh;
             $meninggal[] = $dataaktual->meninggal;
             $minggudalamtahun[] = $dataaktual->minggudalamtahun;
         };
+        foreach ($data_predict as $datapredik) {
+            $positif_predict[] = $datapredik->positif;
+            $sembuh_predict[] = $datapredik->sembuh;
+            $meninggal_predict[] = $datapredik->meninggal;
+            $minggudalamtahun_predict[] = $datapredik->minggudalamtahun;
+        };
+        foreach ($data_jateng as $datajtg) {
+            $positif_jateng[] = $datajtg->positif;
+            $sembuh_jateng[] = $datajtg->sembuh;
+            $meninggal_jateng[] = $datajtg->meninggal;
+        };
         $output = array(
             "positif" => $positif,
             "sembuh" => $sembuh,
+            "positif_predict" => $positif_predict,
+            "sembuh_predict" => $sembuh_predict,
+            "positif_jateng" => $positif_jateng,
+            "sembuh_jateng" => $sembuh_jateng,
             "minggudalamtahun" => $minggudalamtahun,
-            "meninggal" => $meninggal
+            "minggudalamtahun_predict" => $minggudalamtahun_predict,
+            "meninggal" => $meninggal,
+            "meninggal_predict" => $meninggal_predict,
+            "meninggal_jateng" => $meninggal_jateng
         );
         echo json_encode($output);
     }

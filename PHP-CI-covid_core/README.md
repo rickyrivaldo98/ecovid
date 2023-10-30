@@ -37,7 +37,7 @@ Run `app.py` on flask_py_ecovid until get endpoint server http://127.0.0.1:5000 
     database.default.DBPrefix =
     database.default.port = 3306
     ```
-1. Create DB on mySQL called `miraidevs_covid19`, and run CI Migration from terminal
+1. Create DB on mySQL called `miraidevs_covid19`, and run CI Migration from terminal  (if db_miraidevcovid exist all of data and not empty, dont run this)
 
     ```shell
     > php spark migrate --all

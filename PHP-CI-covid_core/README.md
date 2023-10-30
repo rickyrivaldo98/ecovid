@@ -1,5 +1,12 @@
 # CodeIgniter 4 + TailwindCSS App
 
+## Prerequirements:
+Donwload and install `Composer-Setup.exe` Windows Installer :
+https://getcomposer.org/download/
+
+Donwload and install `Node.js ` Windows Installer LTS :
+https://nodejs.org/en/download
+
 ## Intsallation & Setup
 
 1. Install `Composer`:

@@ -3477,8 +3477,8 @@
             type: "GET",
             url: '<?php echo base_url(); ?>lending/dataaktual',
             data:{
-                'id_kab': "<?php echo user()->id_kabupaten?>",
-                'role':"<?=(get_role(user()->id)[0]->name) ?>",
+                'id_kab':"<?= user() != null ? user()->id_kabupaten : '0' ?>",
+                'role':"<?= user() != null ? (get_role(user()->id)[0]->name) : 'user' ?>",
                 'minggudalamtahun': "<?=session()->getFlashData('tminggudalamtahun')?>"
             },
             dataType: "json",
@@ -5025,8 +5025,8 @@
                 type: "GET",
                 url: '<?php echo base_url(); ?>lending/dataaktual',
                 data:{
-                    'id_kab': "<?php echo user()->id_kabupaten?>",
-                    'role':"<?=(get_role(user()->id)[0]->name) ?>",
+                    'id_kab': "<?= user() != null ? user()->id_kabupaten : '0' ?>",
+                    'role':"<?= user() != null ? (get_role(user()->id)[0]->name) : 'user' ?>",
                     'minggudalamtahun': "<?=session()->getFlashData('tminggudalamtahun')?>"
                 },
                 dataType: "json",

@@ -121,7 +121,7 @@ class Lending extends BaseController
                 'sembuh' => $sembuh,
                 'meninggal' => $meninggal,
             ]);
-            // $testretrain = $this->callAPI('POST', 'http://188.166.225.244/ecovid/retrain', json_encode([
+            // $testretrain = $this->callAPI('POST', 'http://127.0.0.1:5000/retrain', json_encode([
             //     'kabupaten' => 99,
             //     'tahun' => $tahun,
             //     "ppkm" => 1,
@@ -130,7 +130,7 @@ class Lending extends BaseController
             //     'sembuh' => $sembuh,
             //     'meninggal' => $meninggal,
             // ]));
-            $semuadata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/retrain', json_encode($dataall));
+            $semuadata = $this->callAPI('POST', 'http://127.0.0.1:5000/retrain', json_encode($dataall));
             // die();
             if (!$succeed or !$semuadata) {
                 session()->setFlashdata('error', 'Data tidak berhasil diupdate!');
@@ -148,7 +148,7 @@ class Lending extends BaseController
                 'sembuh' => $sembuh,
                 'meninggal' => $meninggal,
             ]);
-            $semuadata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/retrain', json_encode($dataall));
+            $semuadata = $this->callAPI('POST', 'http://127.0.0.1:5000/retrain', json_encode($dataall));
             // die();
             if (!$succeed or !$semuadata) {
                 session()->setFlashdata('error', 'Data tidak berhasil ditambahkan!');
@@ -194,7 +194,7 @@ class Lending extends BaseController
                 'sembuh' => $sembuh,
                 'meninggal' => $meninggal,
             ]);
-            $semuadata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/retrain', json_encode($dataall));
+            $semuadata = $this->callAPI('POST', 'http://127.0.0.1:5000/retrain', json_encode($dataall));
             if (!$succeed or !$semuadata) {
                 session()->setFlashdata('error', 'Data tidak berhasil diupdate!');
             }
@@ -211,7 +211,7 @@ class Lending extends BaseController
                 'sembuh' => $sembuh,
                 'meninggal' => $meninggal,
             ]);
-            $semuadata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/retrain', json_encode($dataall));
+            $semuadata = $this->callAPI('POST', 'http://127.0.0.1:5000/retrain', json_encode($dataall));
             if (!$succeed or !$semuadata) {
                 session()->setFlashdata('error', 'Data tidak berhasil ditambahkan!');
             }
@@ -294,7 +294,7 @@ class Lending extends BaseController
         session()->setFlashdata('tminggudalamtahun', $minggudalamtahun);
         // $dataall = $this->_myth_datas->getAll();
         // print_r(json_encode($dataall));
-        // $semuadata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/test', json_encode($dataall));
+        // $semuadata = $this->callAPI('POST', 'http://127.0.0.1:5000/test', json_encode($dataall));
         // die();
 
         $data = [
@@ -308,17 +308,17 @@ class Lending extends BaseController
 
         // session()->setFlashdata('prediksiSuccess',$data);
         $dataallPerform = $this->_myth_datas->getAll();
-        $performdata = $this->callAPI('POST', 'http://188.166.225.244/ecovid/performance', json_encode($dataallPerform));
+        $performdata = $this->callAPI('POST', 'http://127.0.0.1:5000/performance', json_encode($dataallPerform));
 
-        $regressionpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/positif', json_encode($data));
-        $regressionmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/meninggal', json_encode($data));
-        $regressionsembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/sembuh', json_encode($data));
-        $bayesianpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/bayesian/positif', json_encode($data));
-        $bayesianmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/bayesian/meninggal', json_encode($data));
-        $bayesiansembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/bayesian/sembuh', json_encode($data));
-        $annpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/positif', json_encode($data));
-        $annmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/meninggal', json_encode($data));
-        $annsembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/sembuh', json_encode($data));
+        $regressionpositif = $this->callAPI('POST', 'http://127.0.0.1:5000/regression/positif', json_encode($data));
+        $regressionmeninggal = $this->callAPI('POST', 'http://127.0.0.1:5000/regression/meninggal', json_encode($data));
+        $regressionsembuh = $this->callAPI('POST', 'http://127.0.0.1:5000/regression/sembuh', json_encode($data));
+        $bayesianpositif = $this->callAPI('POST', 'http://127.0.0.1:5000/bayesian/positif', json_encode($data));
+        $bayesianmeninggal = $this->callAPI('POST', 'http://127.0.0.1:5000/bayesian/meninggal', json_encode($data));
+        $bayesiansembuh = $this->callAPI('POST', 'http://127.0.0.1:5000/bayesian/sembuh', json_encode($data));
+        $annpositif = $this->callAPI('POST', 'http://127.0.0.1:5000/ann/positif', json_encode($data));
+        $annmeninggal = $this->callAPI('POST', 'http://127.0.0.1:5000/ann/meninggal', json_encode($data));
+        $annsembuh = $this->callAPI('POST', 'http://127.0.0.1:5000/ann/sembuh', json_encode($data));
         
         
         $responserp = json_decode($regressionpositif, true);
@@ -378,15 +378,15 @@ class Lending extends BaseController
                 'sembuh' => (int)$gs->sembuh,
                 'meninggal' => (int)$gs->meninggal
             ];
-            $regressionpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/positif', json_encode($data2));
-            $regressionmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/meninggal', json_encode($data2));
-            $regressionsembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/regression/sembuh', json_encode($data2));
-            $bayesianpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/bayesian/positif', json_encode($data2));
-            $bayesianmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/bayesian/meninggal', json_encode($data2));
-            $bayesiansembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/bayesian/sembuh', json_encode($data2));
-            $annpositif = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/positif', json_encode($data2));
-            $annmeninggal = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/meninggal', json_encode($data2));
-            $annsembuh = $this->callAPI('POST', 'http://188.166.225.244/ecovid/ann/sembuh', json_encode($data2));
+            $regressionpositif = $this->callAPI('POST', 'http://127.0.0.1:5000/regression/positif', json_encode($data2));
+            $regressionmeninggal = $this->callAPI('POST', 'http://127.0.0.1:5000/regression/meninggal', json_encode($data2));
+            $regressionsembuh = $this->callAPI('POST', 'http://127.0.0.1:5000/regression/sembuh', json_encode($data2));
+            $bayesianpositif = $this->callAPI('POST', 'http://127.0.0.1:5000/bayesian/positif', json_encode($data2));
+            $bayesianmeninggal = $this->callAPI('POST', 'http://127.0.0.1:5000/bayesian/meninggal', json_encode($data2));
+            $bayesiansembuh = $this->callAPI('POST', 'http://127.0.0.1:5000/bayesian/sembuh', json_encode($data2));
+            $annpositif = $this->callAPI('POST', 'http://127.0.0.1:5000/ann/positif', json_encode($data2));
+            $annmeninggal = $this->callAPI('POST', 'http://127.0.0.1:5000/ann/meninggal', json_encode($data2));
+            $annsembuh = $this->callAPI('POST', 'http://127.0.0.1:5000/ann/sembuh', json_encode($data2));
 
             $regressionpositifhistory[] = json_decode($regressionpositif, true) < 1 ? 0 : floor(json_decode($regressionpositif, true));
             $regressionmeninggalhistory[] = json_decode($regressionmeninggal, true) < 1 ? 0 : floor(json_decode($regressionmeninggal, true));

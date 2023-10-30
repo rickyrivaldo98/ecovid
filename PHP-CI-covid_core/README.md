@@ -11,7 +11,7 @@ Run `app.py` on flask_py_ecovid until get endpoint server http://127.0.0.1:5000 
 
 ## Intsallation & Setup
 
-1. Install `Composer`:
+1. Install `Composer` (if folder `vendor` existed, dont run this) :
 
     ```shell
     > composer install
